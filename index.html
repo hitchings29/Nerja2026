@@ -1,0 +1,738 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <link rel="manifest" href="manifest.json">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <title>Nerja 2026: Family Guide</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
+        
+        :root {
+            --primary: #1e3a8a;
+            --accent: #3b82f6;
+            --bg: #f8fafc;
+        }
+
+        body { 
+            font-family: 'Plus Jakarta Sans', sans-serif; 
+            background-color: var(--bg); 
+            color: #1e293b; 
+            -webkit-tap-highlight-color: transparent; 
+            overflow-x: hidden;
+            letter-spacing: -0.01em;
+        }
+
+        .glass {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border-bottom: 1px solid rgba(226, 232, 240, 0.8);
+        }
+
+        .page-view { 
+            display: none; 
+            animation: slideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1); 
+        }
+        
+        .page-view.active { display: block; }
+
+        @keyframes slideUp { 
+            from { opacity: 0; transform: translateY(20px); } 
+            to { opacity: 1; transform: translateY(0); } 
+        }
+
+        .safe-pb { padding-bottom: calc(120px + env(safe-area-inset-bottom)); }
+        
+        .day-card { 
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); 
+            border: 1px solid rgba(226, 232, 240, 0.6);
+        }
+        
+        .day-card:active { transform: scale(0.96); filter: brightness(0.95); }
+
+        .nav-btn { position: relative; transition: all 0.3s ease; color: #94a3b8; }
+        .nav-btn.active { color: var(--primary); }
+        
+        /* Language Toggle */
+        .lang-toggle {
+            display: flex;
+            background: rgba(30, 58, 138, 0.1);
+            padding: 2px;
+            border-radius: 12px;
+            width: 76px;
+            position: relative;
+            cursor: pointer;
+        }
+        .lang-active-bg {
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            width: 35px;
+            height: 24px;
+            background: white;
+            border-radius: 10px;
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            z-index: 0;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+        .lang-btn {
+            z-index: 1;
+            width: 50%;
+            text-align: center;
+            font-size: 10px;
+            font-weight: 800;
+            padding: 4px 0;
+            color: #64748b;
+            transition: color 0.3s;
+        }
+        .lang-btn.active-text { color: var(--primary); }
+        
+        .img-header {
+            mask-image: linear-gradient(to bottom, black 80%, transparent 100%);
+            -webkit-mask-image: linear-gradient(to bottom, black 80%, transparent 100%);
+        }
+    </style>
+</head>
+<body class="safe-pb">
+
+    <!-- Sticky Header -->
+    <nav class="sticky top-0 z-50 glass px-6 py-4">
+        <div class="max-w-md mx-auto flex justify-between items-center">
+            <div id="header-main-info">
+                <h1 class="text-xl font-extrabold tracking-tight text-blue-900">Nerja <span class="italic font-medium">2026</span></h1>
+                <p class="text-[9px] font-bold text-slate-400 uppercase tracking-widest" data-i18n="dates">25 Apr — 01 May • Family Trip</p>
+            </div>
+            
+            <button id="back-btn" onclick="showView('main')" class="hidden bg-slate-100 p-2 px-4 rounded-full text-[10px] font-black uppercase tracking-wider text-slate-600 flex items-center gap-2">
+                <i class="fas fa-chevron-left"></i> <span data-i18n="back">Back</span>
+            </button>
+
+            <div class="lang-toggle" onclick="toggleLanguage()">
+                <div id="lang-bg" class="lang-active-bg"></div>
+                <button class="lang-btn active-text" id="btn-en">EN</button>
+                <button class="lang-btn" id="btn-nl">NL</button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- MAIN LIST VIEW -->
+    <main id="view-main" class="page-view active max-w-md mx-auto p-5 space-y-6">
+        <header class="pt-2">
+            <div class="flex justify-between items-end mb-1">
+                <h2 class="text-3xl font-black text-slate-800" data-i18n="schedule">The Schedule</h2>
+                <span class="text-[10px] font-bold text-blue-600 bg-blue-50 px-3 py-1 rounded-full border border-blue-100">Villa Felix Dos</span>
+            </div>
+            <p class="text-xs text-slate-500 font-medium" data-i18n="subtitle">Tap any day for full details.</p>
+        </header>
+
+        <div class="space-y-3">
+            <!-- Day 1 -->
+            <div onclick="showView('day1')" class="day-card bg-white p-5 rounded-[2.5rem] flex gap-5 shadow-sm">
+                <div class="w-14 h-14 rounded-2xl bg-orange-50 border border-orange-100 flex flex-col items-center justify-center flex-shrink-0 text-orange-600">
+                    <span class="text-lg font-black">25</span>
+                    <span class="text-[8px] font-extrabold uppercase">APR</span>
+                </div>
+                <div class="flex-1">
+                    <span class="text-[9px] font-black text-orange-400 uppercase tracking-widest" data-i18n="sat">Saturday</span>
+                    <h4 class="font-bold text-slate-800 text-lg" data-i18n="d1-title">Landing & Logistics</h4>
+                    <p class="text-[11px] text-slate-400 font-medium" data-i18n="d1-sub">Pick up car, Grocery shop & Check-in</p>
+                </div>
+                <div class="self-center w-8 h-8 rounded-full bg-slate-50 flex items-center justify-center">
+                    <i class="fas fa-chevron-right text-slate-300 text-[10px]"></i>
+                </div>
+            </div>
+
+            <!-- Day 2 -->
+            <div onclick="showView('day2')" class="day-card bg-white p-5 rounded-[2.5rem] flex gap-5 shadow-sm">
+                <div class="w-14 h-14 rounded-2xl bg-emerald-50 border border-emerald-100 flex flex-col items-center justify-center flex-shrink-0 text-emerald-600">
+                    <span class="text-lg font-black">26</span>
+                    <span class="text-[8px] font-extrabold uppercase">APR</span>
+                </div>
+                <div class="flex-1">
+                    <span class="text-[9px] font-black text-emerald-400 uppercase tracking-widest" data-i18n="sun">Sunday</span>
+                    <h4 class="font-bold text-slate-800 text-lg" data-i18n="d2-title">Rest & Villa Rituals</h4>
+                    <p class="text-[11px] text-slate-400 font-medium" data-i18n="d2-sub">Chill Villa Day & Optional Frigiliana</p>
+                </div>
+                <div class="self-center w-8 h-8 rounded-full bg-slate-50 flex items-center justify-center">
+                    <i class="fas fa-chevron-right text-slate-300 text-[10px]"></i>
+                </div>
+            </div>
+
+            <!-- Day 3 -->
+            <div onclick="showView('day3')" class="day-card bg-white p-5 rounded-[2.5rem] flex gap-5 shadow-sm">
+                <div class="w-14 h-14 rounded-2xl bg-blue-50 border border-blue-100 flex flex-col items-center justify-center flex-shrink-0 text-blue-600">
+                    <span class="text-lg font-black">27</span>
+                    <span class="text-[8px] font-extrabold uppercase">APR</span>
+                </div>
+                <div class="flex-1">
+                    <span class="text-[9px] font-black text-blue-400 uppercase tracking-widest" data-i18n="mon">Monday</span>
+                    <h4 class="font-bold text-slate-800 text-lg" data-i18n="d3-title">Córdoba: The Mezquita</h4>
+                    <p class="text-[11px] text-slate-400 font-medium" data-i18n="d3-sub">Road Trip</p>
+                </div>
+                <div class="self-center w-8 h-8 rounded-full bg-slate-50 flex items-center justify-center">
+                    <i class="fas fa-chevron-right text-slate-300 text-[10px]"></i>
+                </div>
+            </div>
+
+            <!-- Day 4 -->
+            <div onclick="showView('day4')" class="day-card bg-white p-5 rounded-[2.5rem] flex gap-5 shadow-sm">
+                <div class="w-14 h-14 rounded-2xl bg-emerald-50 border border-emerald-100 flex flex-col items-center justify-center flex-shrink-0 text-emerald-600">
+                    <span class="text-lg font-black">28</span>
+                    <span class="text-[8px] font-extrabold uppercase">APR</span>
+                </div>
+                <div class="flex-1">
+                    <span class="text-[9px] font-black text-emerald-400 uppercase tracking-widest" data-i18n="tue">Tuesday</span>
+                    <h4 class="font-bold text-slate-800 text-lg" data-i18n="d4-title">Poolside & Local Vibes</h4>
+                    <p class="text-[11px] text-slate-400 font-medium" data-i18n="d4-sub">Chill Villa Day & Nerja Market</p>
+                </div>
+                <div class="self-center w-8 h-8 rounded-full bg-slate-50 flex items-center justify-center">
+                    <i class="fas fa-chevron-right text-slate-300 text-[10px]"></i>
+                </div>
+            </div>
+
+            <!-- Day 5 -->
+            <div onclick="showView('day5')" class="day-card bg-white p-5 rounded-[2.5rem] flex gap-5 shadow-sm">
+                <div class="w-14 h-14 rounded-2xl bg-blue-50 border border-blue-100 flex flex-col items-center justify-center flex-shrink-0 text-blue-600">
+                    <span class="text-lg font-black">29</span>
+                    <span class="text-[8px] font-extrabold uppercase">APR</span>
+                </div>
+                <div class="flex-1">
+                    <span class="text-[9px] font-black text-blue-400 uppercase tracking-widest" data-i18n="wed">Wednesday</span>
+                    <h4 class="font-bold text-slate-800 text-lg" data-i18n="d5-title">Ronda & Setenil</h4>
+                    <p class="text-[11px] text-slate-400 font-medium" data-i18n="d5-sub">Road Trip</p>
+                </div>
+                <div class="self-center w-8 h-8 rounded-full bg-slate-50 flex items-center justify-center">
+                    <i class="fas fa-chevron-right text-slate-300 text-[10px]"></i>
+                </div>
+            </div>
+
+            <!-- Day 6 -->
+            <div onclick="showView('day6')" class="day-card bg-white p-5 rounded-[2.5rem] flex gap-5 shadow-sm">
+                <div class="w-14 h-14 rounded-2xl bg-blue-50 border border-blue-100 flex flex-col items-center justify-center flex-shrink-0 text-blue-600">
+                    <span class="text-lg font-black">30</span>
+                    <span class="text-[8px] font-extrabold uppercase">APR</span>
+                </div>
+                <div class="flex-1">
+                    <span class="text-[9px] font-black text-blue-400 uppercase tracking-widest" data-i18n="thu">Thursday</span>
+                    <h4 class="font-bold text-slate-800 text-lg" data-i18n="d6-title">Granada: The Alhambra</h4>
+                    <p class="text-[11px] text-slate-400 font-medium" data-i18n="d6-sub">Grand Highlight Road Trip</p>
+                </div>
+                <div class="self-center w-8 h-8 rounded-full bg-slate-50 flex items-center justify-center">
+                    <i class="fas fa-chevron-right text-slate-300 text-[10px]"></i>
+                </div>
+            </div>
+
+            <!-- Day 7 -->
+            <div onclick="showView('day7')" class="day-card bg-slate-900 p-5 rounded-[2.5rem] flex gap-5 shadow-lg">
+                <div class="w-14 h-14 rounded-2xl bg-white/10 flex flex-col items-center justify-center flex-shrink-0 text-white">
+                    <span class="text-lg font-black">01</span>
+                    <span class="text-[8px] font-extrabold uppercase">MAY</span>
+                </div>
+                <div class="flex-1">
+                    <span class="text-[9px] font-black text-slate-500 uppercase tracking-widest" data-i18n="fri">Friday (Labor Day)</span>
+                    <h4 class="font-bold text-white text-lg" data-i18n="d7-title">Last Day Relaxation</h4>
+                    <p class="text-[11px] text-slate-400 font-medium" data-i18n="d7-sub">Travel Day</p>
+                </div>
+                <div class="self-center w-8 h-8 rounded-full bg-white/10 flex items-center justify-center">
+                    <i class="fas fa-chevron-right text-white/50 text-[10px]"></i>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- DAY 1 DETAIL -->
+    <div id="view-day1" class="page-view max-w-md mx-auto">
+        <div class="relative h-64 overflow-hidden img-header">
+            <img src="https://www.luchtvaartnieuws.nl/sites/default/files/website_633x300/slider-overig/retro-a321neo-transaviacreismedia-1200.jpg" class="w-full h-full object-cover">
+            <div class="absolute bottom-6 left-6 text-white z-10">
+                <span class="text-[10px] font-black uppercase tracking-widest bg-orange-600 px-3 py-1 rounded-full mb-2 inline-block" data-i18n="sat">Saturday</span>
+                <h2 class="text-4xl font-black leading-tight" data-i18n="d1-title">Landing & Logistics</h2>
+            </div>
+            <div class="absolute inset-0 bg-gradient-to-t from-slate-900/80 to-transparent"></div>
+        </div>
+
+        <div class="p-6 space-y-5">
+            <div class="bg-blue-50 border border-blue-100 p-4 rounded-2xl">
+                <p class="text-blue-900 font-bold text-[11px]">
+                    <i class="fas fa-info-circle mr-1"></i> <span data-i18n="d1-pre">Pre-Arrival Note: Christian & Mandy land FRI 24 APR.</span>
+                </p>
+            </div>
+
+            <div class="bg-white p-5 rounded-3xl shadow-sm border border-slate-100 space-y-4">
+                <div class="flex items-center justify-between border-b pb-4">
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-full bg-slate-50 flex items-center justify-center text-slate-400"><i class="fas fa-plane-departure"></i></div>
+                        <div>
+                            <p class="text-[10px] font-bold text-slate-400 uppercase">AMS • HV6115</p>
+                            <p class="text-lg font-black text-slate-800">05:25 <span class="text-xs font-normal">AM</span></p>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-3 text-right">
+                        <div>
+                            <p class="text-[10px] font-bold text-slate-400 uppercase">AGP • MALAGA</p>
+                            <p class="text-lg font-black text-orange-600">08:25 <span class="text-xs font-normal">AM</span></p>
+                        </div>
+                        <div class="w-10 h-10 rounded-full bg-orange-50 flex items-center justify-center text-orange-600"><i class="fas fa-plane-arrival"></i></div>
+                    </div>
+                </div>
+                
+                <div class="space-y-3 text-sm text-slate-600 font-medium">
+                    <p class="flex items-center gap-3"><i class="fas fa-key text-orange-500 w-5"></i> <span data-i18n="car-pickup">ALL IN Car Hire pickup after landing.</span></p>
+                    <p class="flex items-center gap-3"><i class="fas fa-shopping-cart text-orange-500 w-5"></i> <span data-i18n="grocery">Supermarket Visit: Stock up for the week.</span></p>
+                    <p class="flex items-center gap-3 font-bold text-slate-800"><i class="fas fa-home text-blue-600 w-5"></i> <span data-i18n="checkin">Villa Check-in: 16:00</span></p>
+                </div>
+            </div>
+
+            <div class="bg-orange-50 p-6 rounded-[2.5rem] border border-orange-100 shadow-sm">
+                <h4 class="font-bold text-orange-800 mb-4 flex items-center gap-2">
+                    <i class="fas fa-hourglass-half"></i> <span data-i18n="d1-wait-title">Wasting Time Before Check-in</span>
+                </h4>
+                <div class="space-y-4 text-xs text-slate-700 leading-relaxed font-medium">
+                    <p><strong>1. Plaza Mayor:</strong> <span data-i18n="d1-w1">Closest to car hire; huge mall with easy stroller paths.</span></p>
+                    <p><strong>2. Málaga (Muelle Uno):</strong> <span data-i18n="d1-w2">Beautiful flat promenade but high-effort parking.</span></p>
+                    <p><strong>3. Rincón de la Victoria:</strong> <span data-i18n="d1-w3">Closer to Nerja; lovely flat promenade, quiet.</span></p>
+                    <p><strong>4. Burriana Beach (Nerja):</strong> <span data-i18n="d1-w4">Get the drive over with; have lunch by the sea.</span></p>
+                </div>
+                <div class="bg-white p-4 rounded-2xl mt-5 border border-orange-200">
+                    <p class="text-[11px] leading-relaxed text-orange-900 font-bold italic">
+                        <i class="fas fa-check-circle mr-1"></i> <span data-i18n="d1-verdict">Verdict: If Aelin is sleeping, drive straight. If awake, Rincón is easiest.</span>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- DAY 2 DETAIL -->
+    <div id="view-day2" class="page-view max-w-md mx-auto">
+        <div class="relative h-64 overflow-hidden img-header">
+            <img src="https://cf.bstatic.com/xdata/images/hotel/max500/404692228.jpg?k=564da654327c2aa15e61c9663675591d26fc0d82a10af84f561902ebc1d0b178&o=&hp=1" class="w-full h-full object-cover">
+            <div class="absolute inset-0 bg-gradient-to-t from-slate-900/80 to-transparent"></div>
+            <div class="absolute bottom-6 left-6 text-white z-10">
+                <span class="text-[10px] font-black uppercase tracking-widest bg-emerald-600 px-3 py-1 rounded-full mb-2 inline-block" data-i18n="sun">Sunday</span>
+                <h2 class="text-4xl font-black leading-tight" data-i18n="d2-title">Rest & Villa Rituals</h2>
+            </div>
+        </div>
+        <div class="p-6 space-y-6">
+            <p class="font-semibold italic text-slate-500 text-sm leading-relaxed" data-i18n="d2-intro">First full day to settle in. Focus on a "zero-alarm" morning and enjoying the villa amenities.</p>
+            
+            <div class="grid grid-cols-1 gap-4">
+                <div class="bg-white p-5 rounded-3xl border border-slate-100 flex gap-4">
+                    <div class="w-10 h-10 rounded-full bg-emerald-50 text-emerald-600 flex items-center justify-center flex-shrink-0"><i class="fas fa-sun"></i></div>
+                    <div>
+                        <p class="font-bold text-slate-800" data-i18n="morning">Morning</p>
+                        <p class="text-sm text-slate-500" data-i18n="d2-morning">Long breakfast on the terrace and first pool session.</p>
+                    </div>
+                </div>
+                <div class="bg-white p-5 rounded-3xl border border-slate-100 flex gap-4">
+                    <div class="w-10 h-10 rounded-full bg-blue-50 text-blue-600 flex items-center justify-center flex-shrink-0"><i class="fas fa-moon"></i></div>
+                    <div>
+                        <p class="font-bold text-slate-800" data-i18n="afternoon">Afternoon</p>
+                        <p class="text-sm text-slate-500" data-i18n="d2-afternoon">Nap time for Aelin and a relaxed evening at the villa.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-indigo-50 p-6 rounded-[2.5rem] border border-indigo-100">
+                <p class="text-xs font-black text-indigo-800 uppercase tracking-widest mb-3" data-i18n="if-bored">Local Option if bored:</p>
+                <p class="text-sm text-indigo-900 leading-relaxed font-medium" data-i18n="d2-train">The Frigiliana Tourist Train is a great way to see the views of the white village without the steep climb, keeping things easy with the stroller.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- DAY 3 DETAIL -->
+    <div id="view-day3" class="page-view max-w-md mx-auto">
+        <div class="relative h-64 overflow-hidden img-header">
+            <img src="https://www.hellehollis.com/blog/wp-content/uploads/2022/09/Cordoba-skyline.jpg" class="w-full h-full object-cover">
+            <div class="absolute inset-0 bg-gradient-to-t from-slate-900/80 to-transparent"></div>
+            <div class="absolute bottom-6 left-6 text-white z-10">
+                <span class="text-[10px] font-black uppercase tracking-widest bg-blue-600 px-3 py-1 rounded-full mb-2 inline-block" data-i18n="mon">Monday</span>
+                <h2 class="text-4xl font-black leading-tight">Córdoba</h2>
+            </div>
+        </div>
+        <div class="p-6 space-y-5">
+            <p class="text-sm font-medium text-slate-600 leading-relaxed" data-i18n="d3-desc">A beautiful 2h 10m drive to one of the most unique buildings in the world. The interior is a forest of arches—cool, quiet, and stroller-friendly.</p>
+            
+            <div class="bg-white p-5 rounded-3xl border border-slate-100 flex gap-4 shadow-sm">
+                <div class="w-12 h-12 rounded-2xl bg-red-50 text-red-600 flex items-center justify-center flex-shrink-0"><i class="fas fa-camera"></i></div>
+                <div>
+                    <h4 class="font-bold text-slate-800" data-i18n="must-see">Must See</h4>
+                    <p class="text-xs text-slate-500 mt-1 font-medium" data-i18n="d3-see">The Orange Tree Courtyard (Patio de los Naranjos) is a perfect shaded spot for Aelin to have a break.</p>
+                </div>
+            </div>
+
+            <div class="bg-blue-50 p-5 rounded-3xl border border-blue-100 flex gap-4">
+                <div class="w-12 h-12 rounded-2xl bg-white text-blue-600 flex items-center justify-center flex-shrink-0"><i class="fas fa-parking"></i></div>
+                <div>
+                    <h4 class="font-bold text-blue-900" data-i18n="parking">Parking</h4>
+                    <p class="text-xs text-blue-800 mt-1 font-bold" data-i18n="d3-park">Lot: Paseo de la Victoria</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- DAY 4 DETAIL -->
+    <div id="view-day4" class="page-view max-w-md mx-auto">
+        <div class="relative h-64 overflow-hidden img-header">
+            <img src="https://www.spanishlocalmarkets.com/images/markets/Nerja-Markets-spainish-local-markets-2.webp" class="w-full h-full object-cover">
+            <div class="absolute inset-0 bg-gradient-to-t from-slate-900/80 to-transparent"></div>
+            <div class="absolute bottom-6 left-6 text-white z-10">
+                <span class="text-[10px] font-black uppercase tracking-widest bg-emerald-600 px-3 py-1 rounded-full mb-2 inline-block" data-i18n="tue">Tuesday</span>
+                <h2 class="text-4xl font-black leading-tight" data-i18n="d4-title">Poolside & Local</h2>
+            </div>
+        </div>
+        <div class="p-6 space-y-6">
+            <p class="text-sm font-medium text-slate-600 italic" data-i18n="d4-intro">Mid-week recharge. Perfect day for a BBQ lunch at the villa.</p>
+            <div class="bg-white p-6 rounded-[2.5rem] border border-slate-100 shadow-sm space-y-5">
+                <div class="flex gap-4">
+                    <i class="fas fa-shopping-basket text-blue-500 text-lg"></i>
+                    <div>
+                        <h4 class="font-bold text-slate-800" data-i18n="d4-opt1">Nerja Market</h4>
+                        <p class="text-xs text-slate-500 font-medium" data-i18n="d4-opt1-sub">Tuesdays, 10am-2pm. Great for local vibe.</p>
+                    </div>
+                </div>
+                <div class="flex gap-4 border-t pt-5">
+                    <i class="fas fa-umbrella-beach text-blue-500 text-lg"></i>
+                    <div>
+                        <h4 class="font-bold text-slate-800" data-i18n="d4-opt2">Burriana Beach</h4>
+                        <p class="text-xs text-slate-500 font-medium" data-i18n="d4-opt2-sub">Afternoon walk; the promenade is wide and flat, perfect for sunset with the stroller.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- DAY 5 DETAIL -->
+    <div id="view-day5" class="page-view max-w-md mx-auto">
+        <div class="relative h-64 overflow-hidden img-header">
+            <img src="https://dynamic-media.tacdn.com/media/photo-o/30/e4/5a/0a/caption.jpg?w=700&h=500&s=1" class="w-full h-full object-cover">
+            <div class="absolute inset-0 bg-gradient-to-t from-slate-900/80 to-transparent"></div>
+            <div class="absolute bottom-6 left-6 text-white z-10">
+                <span class="text-[10px] font-black uppercase tracking-widest bg-blue-600 px-3 py-1 rounded-full mb-2 inline-block" data-i18n="wed">Wednesday</span>
+                <h2 class="text-4xl font-black leading-tight">Ronda & Setenil</h2>
+            </div>
+        </div>
+        <div class="p-6 space-y-5">
+            <div class="bg-white p-5 rounded-3xl border border-slate-100 shadow-sm">
+                <h4 class="font-bold text-slate-800 mb-2">Setenil de las Bodegas</h4>
+                <p class="text-sm text-slate-500 font-medium leading-relaxed" data-i18n="d5-setenil">A stunning town built into the cliffs. Stick to the riverbed streets for easier stroller access.</p>
+            </div>
+            <div class="bg-white p-5 rounded-3xl border border-slate-100 shadow-sm">
+                <h4 class="font-bold text-slate-800 mb-2">Ronda</h4>
+                <p class="text-sm text-slate-500 font-medium leading-relaxed" data-i18n="d5-ronda">Head to the Alameda del Tajo park for a flat, shaded walk that leads to incredible balconies overlooking the valley and bridge.</p>
+            </div>
+            <div class="bg-amber-50 p-5 rounded-3xl border border-amber-200">
+                <p class="text-xs text-amber-900 font-bold"><i class="fas fa-baby mr-2"></i> <span data-i18n="d5-note">Note: A carrier for Aelin is best for gorge paths.</span></p>
+                <p class="text-[10px] mt-2 font-bold text-amber-700 uppercase"><i class="fas fa-parking mr-1"></i> <span data-i18n="parking">Parking</span>: Martínez Astein</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- DAY 6 DETAIL -->
+    <div id="view-day6" class="page-view max-w-md mx-auto">
+        <div class="bg-slate-900 text-white p-8 rounded-b-[3.5rem] relative overflow-hidden">
+            <div class="relative z-10">
+                <p class="text-[10px] font-black uppercase text-blue-400 tracking-widest mb-2" data-i18n="thu-highlight">Thu 30 Apr • Grand Highlight</p>
+                <h2 class="text-4xl font-black mb-4">The Alhambra</h2>
+                <p class="text-sm opacity-80 leading-relaxed font-medium" data-i18n="d6-intro">The crown jewel of Andalusia. The Nasrid Palaces require a specific time slot—be punctual!</p>
+            </div>
+            <i class="fas fa-chess-rook absolute -right-6 -bottom-6 text-[12rem] opacity-5"></i>
+        </div>
+        <div class="p-6 space-y-4">
+            <div class="bg-white p-6 rounded-[2.5rem] border border-slate-100 shadow-sm space-y-4">
+                <div class="flex gap-4">
+                    <i class="fas fa-ban text-red-500 mt-1"></i>
+                    <p class="text-sm text-slate-600 font-medium"><strong data-i18n="d6-rule1-title">Palaces:</strong> <span data-i18n="d6-rule1">Strollers are forbidden inside the palaces; you'll need the carrier.</span></p>
+                </div>
+                <div class="flex gap-4 border-t pt-4">
+                    <i class="fas fa-tree text-emerald-500 mt-1"></i>
+                    <p class="text-sm text-slate-600 font-medium"><strong data-i18n="d6-rule2-title">Gardens:</strong> <span data-i18n="d6-rule2">The Generalife gardens are mostly accessible with wheels.</span></p>
+                </div>
+                <div class="flex gap-4 border-t pt-4 bg-orange-50 -mx-6 px-6 py-4 rounded-b-[2.5rem]">
+                    <i class="fas fa-shopping-basket text-orange-500 mt-1"></i>
+                    <p class="text-sm text-orange-900 font-black" data-i18n="d6-rule3">Essential: Do your big grocery shop today! Tomorrow is a holiday.</p>
+                </div>
+            </div>
+            
+            <div class="bg-blue-50 p-6 rounded-[2.5rem] border border-blue-100">
+                <p class="text-[10px] font-black text-blue-800 uppercase mb-2" data-i18n="plan-b">Plan B (No tickets):</p>
+                <p class="text-sm text-blue-800 leading-relaxed font-medium" data-i18n="d6-planb">Lazy morning at villa. Afternoon in Frigiliana for a rooftop lunch, or visit the Nerja Caves (naturally cool and easy).</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- DAY 7 DETAIL -->
+    <div id="view-day7" class="page-view max-w-md mx-auto">
+        <div class="p-6 space-y-6">
+            <div class="bg-red-50 p-6 rounded-[2.5rem] border border-red-100">
+                <h3 class="text-2xl font-black text-red-900 mb-2" data-i18n="labor-day">Labor Day</h3>
+                <p class="text-sm text-red-800 font-bold mb-4 italic" data-i18n="labor-warn">Shops are closed! Use up villa supplies.</p>
+                <p class="text-xs text-red-700 leading-relaxed font-medium" data-i18n="d7-intro">The entire day is yours to relax by the pool until departure. Squeeze in one last cold beer!</p>
+            </div>
+
+            <div class="bg-white p-7 rounded-[3rem] border border-slate-100 shadow-sm">
+                <h4 class="font-bold text-slate-800 mb-6 flex items-center gap-3">
+                    <i class="fas fa-plane-departure text-orange-500"></i> <span data-i18n="departure-timeline">Departure Timeline</span>
+                </h4>
+                <div class="space-y-4 font-bold text-sm">
+                    <div class="flex justify-between items-center text-slate-400 uppercase text-[10px]">
+                        <span data-i18n="event">Event</span>
+                        <span data-i18n="time">Time</span>
+                    </div>
+                    <div class="flex justify-between items-center py-3 border-b border-slate-50">
+                        <span class="text-slate-600" data-i18n="dep-nerja">Depart Nerja</span>
+                        <span class="text-slate-900 font-black">19:15</span>
+                    </div>
+                    <div class="flex justify-between items-center py-3 border-b border-slate-50">
+                        <span class="text-slate-600" data-i18n="car-ret">Car Return</span>
+                        <span class="text-slate-900 font-black">20:10</span>
+                    </div>
+                    <div class="flex justify-between items-center py-3 border-b border-slate-50">
+                        <span class="text-blue-600" data-i18n="fl-man">Flight FR7261 (MAN)</span>
+                        <span class="text-blue-900 font-black">22:50</span>
+                    </div>
+                    <div class="flex justify-between items-center py-3">
+                        <span class="text-blue-600" data-i18n="fl-ams">Flight HV6228 (AMS)</span>
+                        <span class="text-blue-900 font-black">23:30</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MAP VIEW -->
+    <div id="view-map" class="page-view max-w-md mx-auto p-5 space-y-6">
+        <header>
+            <h2 class="text-3xl font-black text-slate-800" data-i18n="map-title">Explore Andalusia</h2>
+            <p class="text-xs font-bold text-blue-600 uppercase tracking-widest mt-1" data-i18n="map-sub">Tap to navigate to Baby-Friendly Parking</p>
+        </header>
+        
+        <div class="h-64 rounded-[3rem] overflow-hidden shadow-xl border-4 border-white">
+            <iframe 
+                src="https://maps.google.com/maps?q=Villa%20Felix%20Dos,%20Nerja,%20Spain&t=&z=14&ie=UTF8&iwloc=&output=embed" 
+                style="border:0; width: 100%; height: 100%;" 
+                allowfullscreen="" loading="lazy">
+            </iframe>
+        </div>
+
+        <div class="space-y-3">
+            <h3 class="text-[10px] font-black uppercase tracking-widest text-slate-400 px-4" data-i18n="nav-links">Navigation Links</h3>
+            
+            <div onclick="window.open('https://maps.google.com/?daddr=Parking+Balcon+de+Europa,Nerja', '_blank')" class="day-card bg-white p-5 rounded-3xl flex items-center gap-4 cursor-pointer">
+                <div class="w-10 h-10 rounded-full bg-blue-50 flex items-center justify-center text-blue-600"><i class="fas fa-parking"></i></div>
+                <div class="flex-1">
+                    <h4 class="font-bold text-slate-800 text-sm">Nerja Center</h4>
+                    <p class="text-[10px] text-slate-400 font-bold uppercase" data-i18n="p1">Parking Balcón de Europa</p>
+                </div>
+                <i class="fas fa-external-link-alt text-slate-300 text-[10px]"></i>
+            </div>
+
+            <div onclick="window.open('https://maps.google.com/?daddr=Parking+Frigiliana', '_blank')" class="day-card bg-white p-5 rounded-3xl flex items-center gap-4 cursor-pointer">
+                <div class="w-10 h-10 rounded-full bg-emerald-50 flex items-center justify-center text-emerald-600"><i class="fas fa-parking"></i></div>
+                <div class="flex-1">
+                    <h4 class="font-bold text-slate-800 text-sm">Frigiliana Village</h4>
+                    <p class="text-[10px] text-slate-400 font-bold uppercase" data-i18n="p2">Village Entrance Lot</p>
+                </div>
+                <i class="fas fa-external-link-alt text-slate-300 text-[10px]"></i>
+            </div>
+            
+            <div onclick="window.open('https://maps.google.com/?daddr=Parking+Paseo+de+la+Victoria,Cordoba', '_blank')" class="day-card bg-white p-5 rounded-3xl flex items-center gap-4 cursor-pointer">
+                <div class="w-10 h-10 rounded-full bg-orange-50 flex items-center justify-center text-orange-600"><i class="fas fa-parking"></i></div>
+                <div class="flex-1">
+                    <h4 class="font-bold text-slate-800 text-sm">Córdoba</h4>
+                    <p class="text-[10px] text-slate-400 font-bold uppercase" data-i18n="p3">Paseo de la Victoria Lot</p>
+                </div>
+                <i class="fas fa-external-link-alt text-slate-300 text-[10px]"></i>
+            </div>
+        </div>
+    </div>
+
+    <!-- LOGISTICS VIEW -->
+    <div id="view-logistics" class="page-view max-w-md mx-auto p-5 space-y-8">
+        <header>
+            <h2 class="text-3xl font-black text-slate-800" data-i18n="log-title">Flights</h2>
+        </header>
+
+        <div class="space-y-6">
+            <!-- AMS Group -->
+            <div class="space-y-4">
+                <h3 class="text-[10px] font-black uppercase text-blue-600 tracking-widest px-2" data-i18n="ams-fl">Amsterdam Group</h3>
+                <div class="bg-white p-6 rounded-[2.5rem] border border-slate-100 shadow-sm relative overflow-hidden">
+                    <div class="absolute top-0 right-0 p-3 bg-blue-50 text-blue-600 font-black text-[9px] uppercase rounded-bl-xl">HV6115</div>
+                    <p class="text-[10px] font-bold text-slate-400 uppercase mb-4" data-i18n="outbound">Outbound • Sat 25 Apr</p>
+                    <div class="flex justify-between items-center">
+                        <div class="text-center"><p class="text-2xl font-black">05:25</p><p class="text-[9px] font-bold text-slate-400 uppercase">AMS</p></div>
+                        <i class="fas fa-plane text-slate-100 text-xl"></i>
+                        <div class="text-center"><p class="text-2xl font-black text-blue-900">08:25</p><p class="text-[9px] font-bold text-slate-400 uppercase text-right">AGP</p></div>
+                    </div>
+                </div>
+                <div class="bg-white p-6 rounded-[2.5rem] border border-slate-100 shadow-sm relative overflow-hidden">
+                    <div class="absolute top-0 right-0 p-3 bg-orange-50 text-orange-600 font-black text-[9px] uppercase rounded-bl-xl">HV6228</div>
+                    <p class="text-[10px] font-bold text-slate-400 uppercase mb-4" data-i18n="return">Return • Fri 01 May</p>
+                    <div class="flex justify-between items-center">
+                        <div class="text-center"><p class="text-2xl font-black">23:30</p><p class="text-[9px] font-bold text-slate-400 uppercase">AGP</p></div>
+                        <i class="fas fa-plane text-slate-100 text-xl"></i>
+                        <div class="text-center"><p class="text-2xl font-black text-orange-600">02:40</p><p class="text-[9px] font-bold text-slate-400 uppercase text-right">AMS</p></div>
+                    </div>
+                    <p class="text-[8px] text-slate-400 mt-3 font-bold text-center italic" data-i18n="sat-note">* Lands early morning SAT 2 MAY</p>
+                </div>
+            </div>
+            
+            <!-- MAN Group -->
+            <div class="space-y-4">
+                <h3 class="text-[10px] font-black uppercase text-indigo-600 tracking-widest px-2" data-i18n="man-fl">Manchester Group</h3>
+                <div class="bg-indigo-900 text-white p-6 rounded-[2.5rem] shadow-lg relative overflow-hidden">
+                    <div class="absolute top-0 right-0 p-3 bg-white/10 text-white font-black text-[9px] uppercase rounded-bl-xl">FR7261</div>
+                    <p class="text-[10px] font-bold text-white/50 uppercase mb-4" data-i18n="return">Return • Fri 01 May</p>
+                    <div class="flex justify-between items-center">
+                        <div class="text-center"><p class="text-2xl font-black">22:50</p><p class="text-[9px] font-bold text-white/50 uppercase">AGP</p></div>
+                        <i class="fas fa-plane text-white/10 text-xl"></i>
+                        <div class="text-center"><p class="text-2xl font-black">00:50</p><p class="text-[9px] font-bold text-white/50 uppercase text-right">MAN</p></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Navigation Bar -->
+    <div class="fixed bottom-6 left-1/2 -translate-x-1/2 w-[92%] max-w-md glass rounded-[2.5rem] shadow-2xl z-[100] px-8 py-5 flex justify-between items-center">
+        <button onclick="showView('main')" id="nav-main" class="nav-btn active"><i class="fas fa-calendar-alt text-xl"></i></button>
+        <button onclick="showView('map')" id="nav-map" class="nav-btn"><i class="fas fa-map-marked-alt text-xl"></i></button>
+        <button onclick="showView('logistics')" id="nav-logistics" class="nav-btn"><i class="fas fa-plane text-xl"></i></button>
+        <button onclick="showView('day2')" id="nav-info" class="nav-btn"><i class="fas fa-info-circle text-xl"></i></button>
+    </div>
+
+    <script>
+        const translations = {
+            en: {
+                dates: "25 Apr — 01 May • Family Trip", back: "Back", schedule: "The Schedule", subtitle: "Tap any day for full details.",
+                sat: "Saturday", sun: "Sunday", mon: "Monday", tue: "Tuesday", wed: "Wednesday", thu: "Thursday", fri: "Friday",
+                "d1-title": "Landing & Logistics", "d1-sub": "Pick up car, Grocery shop & Check-in",
+                "d1-pre": "Pre-Arrival Note: Christian & Mandy land FRI 24 APR.",
+                "car-pickup": "ALL IN Car Hire pickup after landing.", "grocery": "Supermarket Visit: Stock up for the week.", "checkin": "Villa Check-in: 16:00",
+                "d1-wait-title": "Wasting Time Before Check-in",
+                "d1-w1": "Closest to car hire; huge mall with easy stroller paths.", "d1-w2": "Beautiful flat promenade but high-effort parking.", "d1-w3": "Closer to Nerja; lovely flat promenade, quiet.", "d1-w4": "Get the drive over with; have lunch by the sea.",
+                "d1-verdict": "Verdict: If Aelin is sleeping, drive straight. If awake, Rincón is easiest.",
+                "d2-title": "Rest & Villa Rituals", "d2-sub": "Chill Villa Day & Optional Frigiliana",
+                "d2-intro": "First full day to settle in. Focus on a \"zero-alarm\" morning and enjoying the villa amenities.",
+                morning: "Morning", afternoon: "Afternoon", "d2-morning": "Long breakfast on the terrace and first pool session.", "d2-afternoon": "Nap time for Aelin and a relaxed evening at the villa.",
+                "if-bored": "Local Option if bored:", "d2-train": "The Frigiliana Tourist Train is a great way to see the views of the white village without the steep climb, keeping things easy with the stroller.",
+                "d3-title": "Córdoba: The Mezquita", "d3-sub": "Road Trip",
+                "d3-desc": "A beautiful 2h 10m drive to one of the most unique buildings in the world. The interior is a forest of arches—cool, quiet, and stroller-friendly.",
+                "must-see": "Must See", "d3-see": "The Orange Tree Courtyard (Patio de los Naranjos) is a perfect shaded spot for Aelin to have a break.",
+                "parking": "Parking", "d3-park": "Lot: Paseo de la Victoria",
+                "d4-title": "Poolside & Local Vibes", "d4-sub": "Chill Villa Day & Nerja Market",
+                "d4-intro": "Mid-week recharge. Perfect day for a BBQ lunch at the villa.",
+                "d4-opt1": "Nerja Market", "d4-opt1-sub": "Tuesdays, 10am-2pm. Great for local vibe.",
+                "d4-opt2": "Burriana Beach", "d4-opt2-sub": "Afternoon walk; the promenade is wide and flat, perfect for sunset with the stroller.",
+                "d5-title": "Ronda & Setenil", "d5-sub": "Road Trip",
+                "d5-setenil": "A stunning town built into the cliffs. Stick to the riverbed streets for easier stroller access.",
+                "d5-ronda": "Head to the Alameda del Tajo park for a flat, shaded walk that leads to incredible balconies overlooking the valley and bridge.",
+                "d5-note": "Note: A carrier for Aelin is best for gorge paths.",
+                "d6-title": "Granada: The Alhambra", "d6-sub": "Grand Highlight Road Trip",
+                "thu-highlight": "Thu 30 Apr • Grand Highlight", "d6-intro": "The crown jewel of Andalusia. The Nasrid Palaces require a specific time slot—be punctual!",
+                "d6-rule1-title": "Palaces:", "d6-rule1": "Strollers are forbidden inside the palaces; you'll need the carrier.",
+                "d6-rule2-title": "Gardens:", "d6-rule2": "The Generalife gardens are mostly accessible with wheels.",
+                "d6-rule3": "Essential: Do your big grocery shop today! Tomorrow is a holiday.",
+                "plan-b": "Plan B (No tickets):", "d6-planb": "Lazy morning at villa. Afternoon in Frigiliana for a rooftop lunch, or visit the Nerja Caves (naturally cool and easy).",
+                "d7-title": "Last Day Relaxation", "d7-sub": "Travel Day", "labor-day": "Labor Day", "labor-warn": "Shops are closed! Use up villa supplies.", "d7-intro": "The entire day is yours to relax by the pool until departure. Squeeze in one last cold beer!",
+                "departure-timeline": "Departure Timeline", event: "Event", time: "Time", "dep-nerja": "Depart Nerja", "car-ret": "Car Return", "fl-man": "Flight FR7261 (MAN)", "fl-ams": "Flight HV6228 (AMS)",
+                "map-title": "Explore Andalusia", "map-sub": "Tap to navigate to Baby-Friendly Parking", "nav-links": "Navigation Links", "p1": "Parking Balcón de Europa", "p2": "Village Entrance Lot", "p3": "Paseo de la Victoria Lot",
+                "log-title": "Flights", "ams-fl": "Amsterdam Group", "man-fl": "Manchester Group", outbound: "Outbound", return: "Return", "sat-note": "* Lands early morning SAT 2 MAY"
+            },
+            nl: {
+                dates: "25 Apr — 01 Mei • Familievakantie", back: "Terug", schedule: "De Planning", subtitle: "Tik op een dag voor details.",
+                sat: "Zaterdag", sun: "Zondag", mon: "Maandag", tue: "Dinsdag", wed: "Woensdag", thu: "Donderdag", fri: "Vrijdag",
+                "d1-title": "Landing & Logistiek", "d1-sub": "Auto ophalen, Boodschappen & Check-in",
+                "d1-pre": "Pre-Aankomst: Christian & Mandy landen op VRIJ 24 APR.",
+                "car-pickup": "ALL IN Car Hire ophalen na landing.", "grocery": "Supermarkt Bezoek: Voorraad voor de week inslaan.", "checkin": "Villa Check-in: 16:00",
+                "d1-wait-title": "Tijd doden voor Check-in",
+                "d1-w1": "Dichtbij autoverhuur; groot winkelcentrum met makkelijke wandelpaden.", "d1-w2": "Mooie vlakke boulevard, maar lastig parkeren.", "d1-w3": "Dichterbij Nerja; heerlijk vlakke boulevard, rustig.", "d1-w4": "Rijd direct door; lekker lunchen aan zee.",
+                "d1-verdict": "Verdict: Als Aelin slaapt, rijd door. Als ze wakker is, is Rincón het makkelijkst.",
+                "d2-title": "Rust & Villa Rituelen", "d2-sub": "Lekker bij de Villa & Optioneel Frigiliana",
+                "d2-intro": "Eerste volle dag om te settelen. Focus op uitslapen en genieten van de villa.",
+                morning: "Ochtend", afternoon: "Middag", "d2-morning": "Lang ontbijt op het terras en eerste duik in het zwembad.", "d2-afternoon": "Slaapje voor Aelin en een ontspannen avond bij de villa.",
+                "if-bored": "Lokale Optie bij verveling:", "d2-train": "Het toeristentreintje van Frigiliana is perfect om het dorp te zien zonder steile klim, ideaal met de kinderwagen.",
+                "d3-title": "Córdoba: De Mezquita", "d3-sub": "Roadtrip",
+                "d3-desc": "Een mooie rit van 2u 10m naar een van de meest unieke gebouwen ter wereld. Het interieur is koel en buggy-vriendelijk.",
+                "must-see": "Must See", "d3-see": "De Patio de los Naranjos is een perfecte schaduwrijke plek voor een pauze met Aelin.",
+                "parking": "Parkeren", "d3-park": "P-Plaats: Paseo de la Victoria",
+                "d4-title": "Poolside & Lokaal", "d4-sub": "Villa Dag & Markt van Nerja",
+                "d4-intro": "Midden in de week even opladen. Perfecte dag voor een BBQ lunch.",
+                "d4-opt1": "Nerja Markt", "d4-opt1-sub": "Dinsdag, 10:00-14:00. Erg leuk en lokaal.",
+                "d4-opt2": "Burriana Strand", "d4-opt2-sub": "Middagwandeling; de boulevard is breed en vlak, perfect voor zonsondergang met de wagen.",
+                "d5-title": "Ronda & Setenil", "d5-sub": "Roadtrip",
+                "d5-setenil": "Een prachtig stadje gebouwd in de rotsen. Houd de straten langs de rivierbedding aan voor kinderwagens.",
+                "d5-ronda": "Ga naar het Alameda del Tajo park voor een vlakke wandeling met uitzicht op de beroemde brug.",
+                "d5-note": "Let op: Een draagzak voor Aelin is het best voor de kloofpaden.",
+                "d6-title": "Granada: Het Alhambra", "d6-sub": "Hoogtepunt Roadtrip",
+                "thu-highlight": "Do 30 Apr • Hoogtepunt", "d6-intro": "Het kroonjuweel van Andalusië. De Nasrid-paleizen vereisen een tijdslot—wees op tijd!",
+                "d6-rule1-title": "Paleizen:", "d6-rule1": "Kinderwagens zijn verboden in de paleizen; je hebt de draagzak nodig.",
+                "d6-rule2-title": "Tuinen:", "d6-rule2": "De Generalife tuinen zijn grotendeels toegankelijk met wielen.",
+                "d6-rule3": "Belangrijk: Doe vandaag de grote boodschappen! Morgen is alles dicht.",
+                "plan-b": "Plan B (Geen tickets):", "d6-planb": "Luie ochtend bij villa. Middag naar Frigiliana voor lunch, of de grotten van Nerja.",
+                "d7-title": "Laatste Dag Ontspanning", "d7-sub": "Reisdag", "labor-day": "Dag van de Arbeid", "labor-warn": "Winkels zijn gesloten! Maak de villa-voorraad op.", "d7-intro": "De hele dag is van jullie bij het zwembad. Geniet nog van een laatste koud biertje!",
+                "departure-timeline": "Vertrekschema", event: "Gebeurtenis", time: "Tijd", "dep-nerja": "Vertrek Nerja", "car-ret": "Auto Inleveren", "fl-man": "Vlucht FR7261 (MAN)", "fl-ams": "Vlucht HV6228 (AMS)",
+                "map-title": "Ontdek Andalusië", "map-sub": "Tik voor navigatie naar parkeerplaatsen", "nav-links": "Snelkoppelingen", "p1": "Parking Balcón de Europa", "p2": "Village Entrance Lot", "p3": "Paseo de la Victoria Lot",
+                "log-title": "Vluchten", "ams-fl": "Amsterdam Groep", "man-fl": "Manchester Groep", outbound: "Heenreis", return: "Terugreis", "sat-note": "* Landt vroege ochtend ZA 2 MEI"
+            }
+        };
+
+        let currentLang = 'en';
+
+        function toggleLanguage() {
+            currentLang = currentLang === 'en' ? 'nl' : 'en';
+            
+            const bg = document.getElementById('lang-bg');
+            const btnEn = document.getElementById('btn-en');
+            const btnNl = document.getElementById('btn-nl');
+            
+            if(currentLang === 'nl') {
+                bg.style.transform = 'translateX(37px)';
+                btnNl.classList.add('active-text');
+                btnEn.classList.remove('active-text');
+            } else {
+                bg.style.transform = 'translateX(0px)';
+                btnEn.classList.add('active-text');
+                btnNl.classList.remove('active-text');
+            }
+
+            document.querySelectorAll('[data-i18n]').forEach(el => {
+                const key = el.getAttribute('data-i18n');
+                if (translations[currentLang][key]) {
+                    el.textContent = translations[currentLang][key];
+                }
+            });
+        }
+
+        function showView(viewId) {
+            document.querySelectorAll('.page-view').forEach(view => view.classList.remove('active'));
+            const target = document.getElementById('view-' + viewId);
+            if(target) target.classList.add('active');
+
+            const backBtn = document.getElementById('back-btn');
+            const headerInfo = document.getElementById('header-main-info');
+            
+            if (viewId === 'main') {
+                backBtn.classList.add('hidden');
+                headerInfo.classList.remove('hidden');
+            } else {
+                backBtn.classList.remove('hidden');
+                headerInfo.classList.add('hidden');
+            }
+
+            document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
+            let navId = (viewId.startsWith('day') && viewId !== 'day2') ? 'main' : 
+                        (viewId === 'day2' ? 'info' : viewId);
+            
+            const activeNav = document.getElementById('nav-' + navId);
+            if (activeNav) activeNav.classList.add('active');
+
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+    </script>
+</body>
+</html>
