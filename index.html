@@ -1,26 +1,17 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <link rel="manifest" href="manifest.json">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Nerja 2026: Ultra Family Guide</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <title>Nerja 2026: Family Guide</title>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
-        
-        :root {
-            --primary: #1e3a8a;
-            --accent: #3b82f6;
-            --bg: #f8fafc;
-        }
-
         body { 
             font-family: 'Plus Jakarta Sans', sans-serif; 
-            background-color: var(--bg); 
-            color: #1e293b; 
+            background-color: #f8fafc; 
+            color: #0f172a; 
             -webkit-tap-highlight-color: transparent; 
             overflow-x: hidden;
             letter-spacing: -0.01em;
@@ -28,445 +19,440 @@
 
         .glass {
             background: rgba(255, 255, 255, 0.85);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
-            border-bottom: 1px solid rgba(226, 232, 240, 0.8);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            border-top: 1px solid rgba(255, 255, 255, 0.6);
+            box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.05);
         }
 
         .page-view { 
             display: none; 
-            animation: slideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1); 
+            animation: slideUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards; 
+            opacity: 0;
+            transform: translateY(20px);
         }
         
         .page-view.active { display: block; }
 
         @keyframes slideUp { 
-            from { opacity: 0; transform: translateY(20px); } 
-            to { opacity: 1; transform: translateY(0); } 
+            from { opacity: 0; transform: translateY(20px) scale(0.98); } 
+            to { opacity: 1; transform: translateY(0) scale(1); } 
         }
 
         .safe-pb { padding-bottom: calc(120px + env(safe-area-inset-bottom)); }
         
         .day-card { 
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); 
-            border: 1px solid rgba(226, 232, 240, 0.6);
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1); 
+            border: 1px solid rgba(255, 255, 255, 1);
+            box-shadow: 0 4px 15px -3px rgba(0, 0, 0, 0.05), 0 2px 6px -2px rgba(0, 0, 0, 0.03);
         }
         
-        .day-card:active { transform: scale(0.96); filter: brightness(0.95); }
+        .day-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.05);
+        }
 
-        .nav-btn { position: relative; transition: all 0.3s ease; color: #94a3b8; }
-        .nav-btn.active { color: var(--primary); }
-        
-        /* Language Toggle */
-        .lang-toggle {
+        .day-card:active { transform: scale(0.97); }
+
+        .nav-btn { 
+            position: relative; 
+            transition: all 0.3s ease; 
+            color: #94a3b8; 
             display: flex;
-            background: rgba(30, 58, 138, 0.1);
-            padding: 2px;
-            border-radius: 12px;
-            width: 76px;
-            position: relative;
-            cursor: pointer;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
         }
-        .lang-active-bg {
-            position: absolute;
-            top: 2px;
-            left: 2px;
-            width: 35px;
-            height: 24px;
-            background: white;
-            border-radius: 10px;
-            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            z-index: 0;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-        }
-        .lang-btn {
-            z-index: 1;
-            width: 50%;
-            text-align: center;
-            font-size: 10px;
-            font-weight: 800;
-            padding: 4px 0;
-            color: #64748b;
-            transition: color 0.3s;
-        }
-        .lang-btn.active-text { color: var(--primary); }
         
-        .img-header {
-            mask-image: linear-gradient(to bottom, black 80%, transparent 100%);
-            -webkit-mask-image: linear-gradient(to bottom, black 80%, transparent 100%);
+        .nav-btn.active { color: #3b82f6; transform: translateY(-2px); }
+        .nav-btn::after {
+            content: '';
+            position: absolute;
+            bottom: -8px;
+            left: 50%;
+            transform: translateX(-50%) scaleX(0);
+            width: 5px;
+            height: 5px;
+            border-radius: 50%;
+            background-color: #3b82f6;
+            transition: transform 0.3s ease;
+        }
+        .nav-btn.active::after { transform: translateX(-50%) scaleX(1); }
+
+        .gradient-text {
+            background: linear-gradient(135deg, #2563eb, #8b5cf6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
     </style>
 </head>
 <body class="safe-pb">
 
-    <!-- Sticky Header -->
-    <nav class="sticky top-0 z-50 glass px-6 py-4">
-        <div class="max-w-md mx-auto flex justify-between items-center">
-            <div id="header-main-info">
-                <h1 class="text-xl font-extrabold tracking-tight text-blue-900">Nerja <span class="italic font-medium">2026</span></h1>
-                <p class="text-[9px] font-bold text-slate-400 uppercase tracking-widest" data-i18n="dates">25 Apr — 01 May • Family Trip</p>
+    <!-- Top Bar -->
+    <div class="fixed top-0 w-full z-50 bg-white/90 backdrop-blur-md border-b border-slate-100 p-4 flex justify-between items-center shadow-sm">
+        <div>
+            <h1 class="font-black text-xl gradient-text">Nerja 2026</h1>
+            <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest" data-i18n="dates">25 Apr — 01 May • Family Trip</p>
+        </div>
+        <button onclick="toggleLanguage()" id="lang-btn" class="bg-slate-100 hover:bg-slate-200 text-slate-700 font-black text-xs py-2 px-4 rounded-full transition-colors">
+            NL
+        </button>
+    </div>
+
+    <div class="h-20"></div> <!-- Spacer -->
+
+    <!-- MAIN MENU (DAYS) -->
+    <div id="view-main" class="page-view active max-w-md mx-auto p-5 space-y-4">
+        <div class="mb-8">
+            <h2 class="text-3xl font-black text-slate-800" data-i18n="schedule">The Schedule</h2>
+            <p class="text-sm font-medium text-slate-500 mt-1" data-i18n="subtitle">Tap any day for full details.</p>
+        </div>
+
+        <div onclick="showView('day1')" class="day-card bg-white p-5 rounded-3xl flex items-center gap-5 cursor-pointer">
+            <div class="text-center min-w-[50px]">
+                <span class="block text-[10px] font-black text-slate-400 uppercase tracking-widest" data-i18n="sat">Sat</span>
+                <span class="text-2xl font-black text-slate-800">25</span>
+            </div>
+            <div class="flex-1">
+                <h3 class="font-black text-lg text-slate-800 leading-tight" data-i18n="d1-title">Landing & Logistics</h3>
+                <p class="text-xs font-bold text-blue-500 mt-1 uppercase" data-i18n="d1-sub">Pick up car & Check-in</p>
+            </div>
+            <i class="fas fa-chevron-right text-slate-300"></i>
+        </div>
+
+        <div onclick="showView('day2')" class="day-card bg-white p-5 rounded-3xl flex items-center gap-5 cursor-pointer">
+            <div class="text-center min-w-[50px]">
+                <span class="block text-[10px] font-black text-slate-400 uppercase tracking-widest" data-i18n="sun">Sun</span>
+                <span class="text-2xl font-black text-slate-800">26</span>
+            </div>
+            <div class="flex-1">
+                <h3 class="font-black text-lg text-slate-800 leading-tight" data-i18n="d2-title">Rest & Villa Rituals</h3>
+                <p class="text-xs font-bold text-emerald-500 mt-1 uppercase" data-i18n="d2-sub">Chill Villa Day</p>
+            </div>
+            <i class="fas fa-chevron-right text-slate-300"></i>
+        </div>
+
+        <div onclick="showView('day3')" class="day-card bg-white p-5 rounded-3xl flex items-center gap-5 cursor-pointer">
+            <div class="text-center min-w-[50px]">
+                <span class="block text-[10px] font-black text-slate-400 uppercase tracking-widest" data-i18n="mon">Mon</span>
+                <span class="text-2xl font-black text-slate-800">27</span>
+            </div>
+            <div class="flex-1">
+                <h3 class="font-black text-lg text-slate-800 leading-tight" data-i18n="d3-title">Córdoba: The Mezquita</h3>
+                <p class="text-xs font-bold text-orange-500 mt-1 uppercase" data-i18n="d3-sub">Road Trip</p>
+            </div>
+            <i class="fas fa-chevron-right text-slate-300"></i>
+        </div>
+
+        <div onclick="showView('day4')" class="day-card bg-white p-5 rounded-3xl flex items-center gap-5 cursor-pointer">
+            <div class="text-center min-w-[50px]">
+                <span class="block text-[10px] font-black text-slate-400 uppercase tracking-widest" data-i18n="tue">Tue</span>
+                <span class="text-2xl font-black text-slate-800">28</span>
+            </div>
+            <div class="flex-1">
+                <h3 class="font-black text-lg text-slate-800 leading-tight" data-i18n="d4-title">Poolside & Local Vibes</h3>
+                <p class="text-xs font-bold text-pink-500 mt-1 uppercase" data-i18n="d4-sub">Nerja Market</p>
+            </div>
+            <i class="fas fa-chevron-right text-slate-300"></i>
+        </div>
+
+        <div onclick="showView('day5')" class="day-card bg-white p-5 rounded-3xl flex items-center gap-5 cursor-pointer">
+            <div class="text-center min-w-[50px]">
+                <span class="block text-[10px] font-black text-slate-400 uppercase tracking-widest" data-i18n="wed">Wed</span>
+                <span class="text-2xl font-black text-slate-800">29</span>
+            </div>
+            <div class="flex-1">
+                <h3 class="font-black text-lg text-slate-800 leading-tight" data-i18n="d5-title">Ronda & Setenil</h3>
+                <p class="text-xs font-bold text-purple-500 mt-1 uppercase" data-i18n="d5-sub">Road Trip</p>
+            </div>
+            <i class="fas fa-chevron-right text-slate-300"></i>
+        </div>
+
+        <div onclick="showView('day6')" class="day-card bg-white p-5 rounded-3xl border-2 border-amber-200 flex items-center gap-5 cursor-pointer relative overflow-hidden">
+            <div class="absolute top-0 right-0 bg-amber-400 text-white text-[8px] font-black px-3 py-1 rounded-bl-lg uppercase">Highlight</div>
+            <div class="text-center min-w-[50px]">
+                <span class="block text-[10px] font-black text-amber-500 uppercase tracking-widest" data-i18n="thu">Thu</span>
+                <span class="text-2xl font-black text-slate-800">30</span>
+            </div>
+            <div class="flex-1">
+                <h3 class="font-black text-lg text-slate-800 leading-tight" data-i18n="d6-title">Granada: The Alhambra</h3>
+                <p class="text-xs font-bold text-amber-600 mt-1 uppercase" data-i18n="d6-sub">Grand Highlight</p>
+            </div>
+            <i class="fas fa-chevron-right text-slate-300"></i>
+        </div>
+
+        <div onclick="showView('day7')" class="day-card bg-white p-5 rounded-3xl flex items-center gap-5 cursor-pointer">
+            <div class="text-center min-w-[50px]">
+                <span class="block text-[10px] font-black text-red-400 uppercase tracking-widest" data-i18n="fri">Fri</span>
+                <span class="text-2xl font-black text-slate-800">01</span>
+            </div>
+            <div class="flex-1">
+                <h3 class="font-black text-lg text-slate-800 leading-tight" data-i18n="d7-title">Last Day Relaxation</h3>
+                <p class="text-xs font-bold text-red-500 mt-1 uppercase" data-i18n="d7-sub">Travel Day & Labor Day</p>
+            </div>
+            <i class="fas fa-plane-departure text-slate-300"></i>
+        </div>
+    </div>
+
+    <!-- DETAIL VIEWS FOR DAYS -->
+    <!-- DAY 1 -->
+    <div id="view-day1" class="page-view max-w-md mx-auto">
+        <button onclick="showView('main')" class="m-5 bg-white shadow-sm border border-slate-100 text-slate-600 px-4 py-2 rounded-full text-sm font-bold flex items-center gap-2 hover:bg-slate-50 transition-colors active:scale-95">
+            <i class="fas fa-arrow-left"></i> <span data-i18n="back">Back</span>
+        </button>
+        <div class="px-6 pb-6 space-y-6">
+            <div>
+                <span class="text-blue-500 font-black text-[10px] uppercase tracking-widest" data-i18n="sat">Saturday</span>
+                <h2 class="text-4xl font-black text-slate-800 leading-tight" data-i18n="d1-title">Landing & Logistics</h2>
             </div>
             
-            <button id="back-btn" onclick="showView('main')" class="hidden bg-slate-100 p-2 px-4 rounded-full text-[10px] font-black uppercase tracking-wider text-slate-600 flex items-center gap-2">
-                <i class="fas fa-chevron-left"></i> <span data-i18n="back">Back</span>
-            </button>
-
-            <div class="lang-toggle" onclick="toggleLanguage()">
-                <div id="lang-bg" class="lang-active-bg"></div>
-                <button class="lang-btn active-text" id="btn-en">EN</button>
-                <button class="lang-btn" id="btn-nl">NL</button>
+            <div class="bg-indigo-900 text-white p-5 rounded-3xl shadow-lg relative overflow-hidden">
+                <i class="fas fa-info-circle absolute -right-4 -bottom-4 text-6xl text-white opacity-10"></i>
+                <p class="text-sm font-bold relative z-10" data-i18n="d1-pre">Pre-Arrival Note: Christian & Mandy land FRI 24 APR.</p>
             </div>
-        </div>
-    </nav>
 
-    <!-- MAIN LIST VIEW -->
-    <main id="view-main" class="page-view active max-w-md mx-auto p-5 space-y-6">
-        <header class="pt-2">
-            <div class="flex justify-between items-end mb-1">
-                <h2 class="text-3xl font-black text-slate-800" data-i18n="schedule">The Schedule</h2>
-                <span class="text-[10px] font-bold text-blue-600 bg-blue-50 px-3 py-1 rounded-full border border-blue-100">Villa Felix Dos</span>
-            </div>
-            <p class="text-xs text-slate-500 font-medium" data-i18n="subtitle">Tap any day for full details.</p>
-        </header>
+            <ul class="space-y-4">
+                <li class="flex items-start gap-4 bg-white p-4 rounded-2xl border border-slate-100 shadow-sm">
+                    <div class="w-10 h-10 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center shrink-0"><i class="fas fa-car"></i></div>
+                    <p class="text-sm text-slate-700 font-medium pt-2" data-i18n="car-pickup">ALL IN Car Hire pickup after landing.</p>
+                </li>
+                <li class="flex items-start gap-4 bg-white p-4 rounded-2xl border border-slate-100 shadow-sm">
+                    <div class="w-10 h-10 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center shrink-0"><i class="fas fa-shopping-cart"></i></div>
+                    <p class="text-sm text-slate-700 font-medium pt-2" data-i18n="grocery">Supermarket Visit: Stock up for the week.</p>
+                </li>
+                <li class="flex items-start gap-4 bg-white p-4 rounded-2xl border border-slate-100 shadow-sm">
+                    <div class="w-10 h-10 rounded-full bg-purple-100 text-purple-600 flex items-center justify-center shrink-0"><i class="fas fa-key"></i></div>
+                    <p class="text-sm text-slate-700 font-medium pt-2"><span class="font-bold text-slate-900" data-i18n="checkin">Villa Check-in: 16:00</span></p>
+                </li>
+            </ul>
 
-        <div class="space-y-3">
-            <!-- Day 1 -->
-            <div onclick="showView('day1')" class="day-card bg-white p-5 rounded-[2.5rem] flex gap-5 shadow-sm">
-                <div class="w-14 h-14 rounded-2xl bg-orange-50 border border-orange-100 flex flex-col items-center justify-center flex-shrink-0 text-orange-600">
-                    <span class="text-lg font-black">25</span>
-                    <span class="text-[8px] font-extrabold uppercase">APR</span>
+            <div class="bg-amber-50 p-6 rounded-[2.5rem] border border-amber-100">
+                <h3 class="font-black text-amber-900 mb-3" data-i18n="d1-wait-title">Wasting Time Before Check-in</h3>
+                <div class="space-y-3 text-sm text-amber-800 font-medium">
+                    <p><strong>A) Plaza Mayor (Malaga):</strong> <span data-i18n="d1-w1">Closest to car hire; huge mall with easy stroller paths.</span></p>
+                    <p><strong>B) Pedregalejo:</strong> <span data-i18n="d1-w2">Beautiful flat promenade but high-effort parking.</span></p>
+                    <p><strong>C) Rincón de la Victoria:</strong> <span data-i18n="d1-w3">Closer to Nerja; lovely flat promenade, quiet.</span></p>
+                    <p><strong>D) Go straight to Nerja:</strong> <span data-i18n="d1-w4">Get the drive over with; have lunch by the sea.</span></p>
                 </div>
-                <div class="flex-1">
-                    <span class="text-[9px] font-black text-orange-400 uppercase tracking-widest" data-i18n="sat">Saturday</span>
-                    <h4 class="font-bold text-slate-800 text-lg" data-i18n="d1-title">Landing & Logistics</h4>
-                    <p class="text-[11px] text-slate-400 font-medium" data-i18n="d1-sub">Pick up car, Grocery shop & Check-in</p>
-                </div>
-                <div class="self-center w-8 h-8 rounded-full bg-slate-50 flex items-center justify-center">
-                    <i class="fas fa-chevron-right text-slate-300 text-[10px]"></i>
+                <div class="mt-4 p-3 bg-white/50 rounded-xl">
+                    <p class="text-xs font-bold text-amber-900" data-i18n="d1-verdict">Verdict: If Aelin is sleeping, drive straight. If awake, Rincón is easiest.</p>
                 </div>
             </div>
 
-            <!-- Day 2 -->
-            <div onclick="showView('day2')" class="day-card bg-white p-5 rounded-[2.5rem] flex gap-5 shadow-sm">
-                <div class="w-14 h-14 rounded-2xl bg-emerald-50 border border-emerald-100 flex flex-col items-center justify-center flex-shrink-0 text-emerald-600">
-                    <span class="text-lg font-black">26</span>
-                    <span class="text-[8px] font-extrabold uppercase">APR</span>
-                </div>
-                <div class="flex-1">
-                    <span class="text-[9px] font-black text-emerald-400 uppercase tracking-widest" data-i18n="sun">Sunday</span>
-                    <h4 class="font-bold text-slate-800 text-lg" data-i18n="d2-title">Rest & Villa Rituals</h4>
-                    <p class="text-[11px] text-slate-400 font-medium" data-i18n="d2-sub">Chill Villa Day & Optional Frigiliana</p>
-                </div>
-                <div class="self-center w-8 h-8 rounded-full bg-slate-50 flex items-center justify-center">
-                    <i class="fas fa-chevron-right text-slate-300 text-[10px]"></i>
-                </div>
-            </div>
-
-            <!-- Day 3 -->
-            <div onclick="showView('day3')" class="day-card bg-white p-5 rounded-[2.5rem] flex gap-5 shadow-sm">
-                <div class="w-14 h-14 rounded-2xl bg-blue-50 border border-blue-100 flex flex-col items-center justify-center flex-shrink-0 text-blue-600">
-                    <span class="text-lg font-black">27</span>
-                    <span class="text-[8px] font-extrabold uppercase">APR</span>
-                </div>
-                <div class="flex-1">
-                    <span class="text-[9px] font-black text-blue-400 uppercase tracking-widest" data-i18n="mon">Monday</span>
-                    <h4 class="font-bold text-slate-800 text-lg" data-i18n="d3-title">Córdoba: The Mezquita</h4>
-                    <p class="text-[11px] text-slate-400 font-medium" data-i18n="d3-sub">Road Trip</p>
-                </div>
-                <div class="self-center w-8 h-8 rounded-full bg-slate-50 flex items-center justify-center">
-                    <i class="fas fa-chevron-right text-slate-300 text-[10px]"></i>
-                </div>
-            </div>
-
-            <!-- Day 4 -->
-            <div onclick="showView('day4')" class="day-card bg-white p-5 rounded-[2.5rem] flex gap-5 shadow-sm">
-                <div class="w-14 h-14 rounded-2xl bg-emerald-50 border border-emerald-100 flex flex-col items-center justify-center flex-shrink-0 text-emerald-600">
-                    <span class="text-lg font-black">28</span>
-                    <span class="text-[8px] font-extrabold uppercase">APR</span>
-                </div>
-                <div class="flex-1">
-                    <span class="text-[9px] font-black text-emerald-400 uppercase tracking-widest" data-i18n="tue">Tuesday</span>
-                    <h4 class="font-bold text-slate-800 text-lg" data-i18n="d4-title">Poolside & Local Vibes</h4>
-                    <p class="text-[11px] text-slate-400 font-medium" data-i18n="d4-sub">Chill Villa Day & Nerja Market</p>
-                </div>
-                <div class="self-center w-8 h-8 rounded-full bg-slate-50 flex items-center justify-center">
-                    <i class="fas fa-chevron-right text-slate-300 text-[10px]"></i>
-                </div>
-            </div>
-
-            <!-- Day 5 -->
-            <div onclick="showView('day5')" class="day-card bg-white p-5 rounded-[2.5rem] flex gap-5 shadow-sm">
-                <div class="w-14 h-14 rounded-2xl bg-blue-50 border border-blue-100 flex flex-col items-center justify-center flex-shrink-0 text-blue-600">
-                    <span class="text-lg font-black">29</span>
-                    <span class="text-[8px] font-extrabold uppercase">APR</span>
-                </div>
-                <div class="flex-1">
-                    <span class="text-[9px] font-black text-blue-400 uppercase tracking-widest" data-i18n="wed">Wednesday</span>
-                    <h4 class="font-bold text-slate-800 text-lg" data-i18n="d5-title">Ronda & Setenil</h4>
-                    <p class="text-[11px] text-slate-400 font-medium" data-i18n="d5-sub">Road Trip</p>
-                </div>
-                <div class="self-center w-8 h-8 rounded-full bg-slate-50 flex items-center justify-center">
-                    <i class="fas fa-chevron-right text-slate-300 text-[10px]"></i>
-                </div>
-            </div>
-
-            <!-- Day 6 -->
-            <div onclick="showView('day6')" class="day-card bg-white p-5 rounded-[2.5rem] flex gap-5 shadow-sm">
-                <div class="w-14 h-14 rounded-2xl bg-blue-50 border border-blue-100 flex flex-col items-center justify-center flex-shrink-0 text-blue-600">
-                    <span class="text-lg font-black">30</span>
-                    <span class="text-[8px] font-extrabold uppercase">APR</span>
-                </div>
-                <div class="flex-1">
-                    <span class="text-[9px] font-black text-blue-400 uppercase tracking-widest" data-i18n="thu">Thursday</span>
-                    <h4 class="font-bold text-slate-800 text-lg" data-i18n="d6-title">Granada: The Alhambra</h4>
-                    <p class="text-[11px] text-slate-400 font-medium" data-i18n="d6-sub">Grand Highlight Road Trip</p>
-                </div>
-                <div class="self-center w-8 h-8 rounded-full bg-slate-50 flex items-center justify-center">
-                    <i class="fas fa-chevron-right text-slate-300 text-[10px]"></i>
-                </div>
-            </div>
-
-            <!-- Day 7 -->
-            <div onclick="showView('day7')" class="day-card bg-slate-900 p-5 rounded-[2.5rem] flex gap-5 shadow-lg">
-                <div class="w-14 h-14 rounded-2xl bg-white/10 flex flex-col items-center justify-center flex-shrink-0 text-white">
-                    <span class="text-lg font-black">01</span>
-                    <span class="text-[8px] font-extrabold uppercase">MAY</span>
-                </div>
-                <div class="flex-1">
-                    <span class="text-[9px] font-black text-slate-500 uppercase tracking-widest" data-i18n="fri">Friday (Labor Day)</span>
-                    <h4 class="font-bold text-white text-lg" data-i18n="d7-title">Last Day Relaxation</h4>
-                    <p class="text-[11px] text-slate-400 font-medium" data-i18n="d7-sub">Travel Day</p>
-                </div>
-                <div class="self-center w-8 h-8 rounded-full bg-white/10 flex items-center justify-center">
-                    <i class="fas fa-chevron-right text-white/50 text-[10px]"></i>
+            <!-- New Fact Block -->
+            <div class="bg-sky-50 p-5 rounded-2xl border border-sky-100 flex gap-4 items-start shadow-sm">
+                <i class="fas fa-lightbulb text-sky-500 mt-1"></i>
+                <div>
+                    <h4 class="font-bold text-sky-900 text-sm mb-1" data-i18n="d1-tip-title">Arrival Tip</h4>
+                    <p class="text-xs text-sky-800 leading-relaxed" data-i18n="d1-tip-desc">The drive from Malaga airport to Nerja takes about 45-50 minutes straight down the A-7 highway. Make sure to buy large 5L or 8L bottles of water (Agua Mineral) during your grocery run—tap water is safe, but bottled tastes much better for tea and baby formula!</p>
                 </div>
             </div>
         </div>
-    </main>
+    </div>
 
-    <!-- DAY 1 DETAIL -->
-    <div id="view-day1" class="page-view max-w-md mx-auto">
-        <div class="relative h-64 overflow-hidden img-header">
-            <img src="https://www.luchtvaartnieuws.nl/sites/default/files/website_633x300/slider-overig/retro-a321neo-transaviacreismedia-1200.jpg" class="w-full h-full object-cover">
-            <div class="absolute bottom-6 left-6 text-white z-10">
-                <span class="text-[10px] font-black uppercase tracking-widest bg-orange-600 px-3 py-1 rounded-full mb-2 inline-block" data-i18n="sat">Saturday</span>
-                <h2 class="text-4xl font-black leading-tight" data-i18n="d1-title">Landing & Logistics</h2>
+    <!-- DAY 2 -->
+    <div id="view-day2" class="page-view max-w-md mx-auto">
+        <button onclick="showView('main')" class="m-5 bg-white shadow-sm border border-slate-100 text-slate-600 px-4 py-2 rounded-full text-sm font-bold flex items-center gap-2 hover:bg-slate-50 active:scale-95">
+            <i class="fas fa-arrow-left"></i> <span data-i18n="back">Back</span>
+        </button>
+        <div class="px-6 pb-6 space-y-6">
+            <div>
+                <span class="text-emerald-500 font-black text-[10px] uppercase tracking-widest" data-i18n="sun">Sunday</span>
+                <h2 class="text-4xl font-black text-slate-800 leading-tight" data-i18n="d2-title">Rest & Villa Rituals</h2>
             </div>
-            <div class="absolute inset-0 bg-gradient-to-t from-slate-900/80 to-transparent"></div>
+
+            <p class="text-slate-600 font-medium leading-relaxed" data-i18n="d2-intro">First full day to settle in. Focus on a "zero-alarm" morning and enjoying the villa amenities.</p>
+
+            <div class="grid grid-cols-2 gap-4">
+                <div class="bg-white p-5 rounded-[2rem] border border-slate-100 shadow-sm text-center">
+                    <i class="fas fa-coffee text-2xl text-amber-500 mb-3"></i>
+                    <h4 class="font-black text-sm text-slate-800 mb-1" data-i18n="morning">Morning</h4>
+                    <p class="text-[10px] text-slate-500 font-bold" data-i18n="d2-morning">Long breakfast on the terrace and first pool session.</p>
+                </div>
+                <div class="bg-white p-5 rounded-[2rem] border border-slate-100 shadow-sm text-center">
+                    <i class="fas fa-moon text-2xl text-indigo-400 mb-3"></i>
+                    <h4 class="font-black text-sm text-slate-800 mb-1" data-i18n="afternoon">Afternoon</h4>
+                    <p class="text-[10px] text-slate-500 font-bold" data-i18n="d2-afternoon">Nap time for Aelin and a relaxed evening at the villa.</p>
+                </div>
+            </div>
+
+            <div class="bg-emerald-50 p-6 rounded-[2.5rem] border border-emerald-100">
+                <h3 class="font-black text-emerald-900 mb-2 flex items-center gap-2"><i class="fas fa-tree"></i> <span data-i18n="if-bored">Local Option if bored:</span></h3>
+                <p class="text-sm text-emerald-800 font-medium leading-relaxed" data-i18n="d2-train">The Frigiliana Tourist Train is a great way to see the views of the white village without the steep climb, keeping things easy with the stroller.</p>
+            </div>
+
+            <!-- New Fact Block -->
+            <div class="bg-orange-50 p-5 rounded-2xl border border-orange-100 flex gap-4 items-start shadow-sm">
+                <i class="fas fa-map-signs text-orange-500 mt-1"></i>
+                <div>
+                    <h4 class="font-bold text-orange-900 text-sm mb-1" data-i18n="d2-tip-title">About Frigiliana</h4>
+                    <p class="text-xs text-orange-800 leading-relaxed" data-i18n="d2-tip-desc">Consistently voted one of the most beautiful villages in Spain. Its Moorish old town is a maze of perfectly preserved, flower-draped streets. Look out for the local sweet wine ('Vino de Frigiliana') and cane honey ('Miel de Caña'), uniquely produced here.</p>
+                </div>
+            </div>
         </div>
+    </div>
 
-        <div class="p-6 space-y-5">
-            <div class="bg-blue-50 border border-blue-100 p-4 rounded-2xl">
-                <p class="text-blue-900 font-bold text-[11px]">
-                    <i class="fas fa-info-circle mr-1"></i> <span data-i18n="d1-pre">Pre-Arrival Note: Christian & Mandy land FRI 24 APR.</span>
-                </p>
+    <!-- DAY 3 -->
+    <div id="view-day3" class="page-view max-w-md mx-auto">
+        <button onclick="showView('main')" class="m-5 bg-white shadow-sm border border-slate-100 text-slate-600 px-4 py-2 rounded-full text-sm font-bold flex items-center gap-2 hover:bg-slate-50 active:scale-95">
+            <i class="fas fa-arrow-left"></i> <span data-i18n="back">Back</span>
+        </button>
+        <div class="px-6 pb-6 space-y-6">
+            <div>
+                <span class="text-orange-500 font-black text-[10px] uppercase tracking-widest" data-i18n="mon">Monday</span>
+                <h2 class="text-4xl font-black text-slate-800 leading-tight" data-i18n="d3-title">Córdoba: The Mezquita</h2>
             </div>
 
-            <div class="bg-white p-5 rounded-3xl shadow-sm border border-slate-100 space-y-4">
-                <div class="flex items-center justify-between border-b pb-4">
-                    <div class="flex items-center gap-3">
-                        <div class="w-10 h-10 rounded-full bg-slate-50 flex items-center justify-center text-slate-400"><i class="fas fa-plane-departure"></i></div>
-                        <div>
-                            <p class="text-[10px] font-bold text-slate-400 uppercase">AMS • HV6115</p>
-                            <p class="text-lg font-black text-slate-800">05:25 <span class="text-xs font-normal">AM</span></p>
-                        </div>
-                    </div>
-                    <div class="flex items-center gap-3 text-right">
-                        <div>
-                            <p class="text-[10px] font-bold text-slate-400 uppercase">AGP • MALAGA</p>
-                            <p class="text-lg font-black text-orange-600">08:25 <span class="text-xs font-normal">AM</span></p>
-                        </div>
-                        <div class="w-10 h-10 rounded-full bg-orange-50 flex items-center justify-center text-orange-600"><i class="fas fa-plane-arrival"></i></div>
+            <p class="text-slate-600 font-medium leading-relaxed bg-white p-5 rounded-3xl border border-slate-100 shadow-sm" data-i18n="d3-desc">A beautiful 2h 10m drive to one of the most unique buildings in the world. The interior is a forest of arches—cool, quiet, and stroller-friendly.</p>
+
+            <div class="space-y-3">
+                <div class="flex items-center gap-4 bg-orange-50 p-4 rounded-2xl border border-orange-100">
+                    <div class="w-10 h-10 rounded-full bg-orange-100 text-orange-600 flex items-center justify-center shrink-0"><i class="fas fa-camera"></i></div>
+                    <div>
+                        <p class="text-[10px] font-black text-orange-400 uppercase tracking-widest" data-i18n="must-see">Must See</p>
+                        <p class="text-sm font-bold text-orange-900 leading-tight" data-i18n="d3-see">The Orange Tree Courtyard (Patio de los Naranjos) is a perfect shaded spot for Aelin to have a break.</p>
                     </div>
                 </div>
                 
-                <div class="space-y-3 text-sm text-slate-600 font-medium">
-                    <p class="flex items-center gap-3"><i class="fas fa-key text-orange-500 w-5"></i> <span data-i18n="car-pickup">ALL IN Car Hire pickup after landing.</span></p>
-                    <p class="flex items-center gap-3"><i class="fas fa-shopping-cart text-orange-500 w-5"></i> <span data-i18n="grocery">Supermarket Visit: Stock up for the week.</span></p>
-                    <p class="flex items-center gap-3 font-bold text-slate-800"><i class="fas fa-home text-blue-600 w-5"></i> <span data-i18n="checkin">Villa Check-in: 16:00</span></p>
-                </div>
-            </div>
-
-            <div class="bg-orange-50 p-6 rounded-[2.5rem] border border-orange-100 shadow-sm">
-                <h4 class="font-bold text-orange-800 mb-4 flex items-center gap-2">
-                    <i class="fas fa-hourglass-half"></i> <span data-i18n="d1-wait-title">Wasting Time Before Check-in</span>
-                </h4>
-                <div class="space-y-4 text-xs text-slate-700 leading-relaxed font-medium">
-                    <p><strong>1. Plaza Mayor:</strong> <span data-i18n="d1-w1">Closest to car hire; huge mall with easy stroller paths.</span></p>
-                    <p><strong>2. Málaga (Muelle Uno):</strong> <span data-i18n="d1-w2">Beautiful flat promenade but high-effort parking.</span></p>
-                    <p><strong>3. Rincón de la Victoria:</strong> <span data-i18n="d1-w3">Closer to Nerja; lovely flat promenade, quiet.</span></p>
-                    <p><strong>4. Burriana Beach (Nerja):</strong> <span data-i18n="d1-w4">Get the drive over with; have lunch by the sea.</span></p>
-                </div>
-                <div class="bg-white p-4 rounded-2xl mt-5 border border-orange-200">
-                    <p class="text-[11px] leading-relaxed text-orange-900 font-bold italic">
-                        <i class="fas fa-check-circle mr-1"></i> <span data-i18n="d1-verdict">Verdict: If Aelin is sleeping, drive straight. If awake, Rincón is easiest.</span>
-                    </p>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- DAY 2 DETAIL -->
-    <div id="view-day2" class="page-view max-w-md mx-auto">
-        <div class="relative h-64 overflow-hidden img-header">
-            <img src="https://cf.bstatic.com/xdata/images/hotel/max500/404692228.jpg?k=564da654327c2aa15e61c9663675591d26fc0d82a10af84f561902ebc1d0b178&o=&hp=1" class="w-full h-full object-cover">
-            <div class="absolute inset-0 bg-gradient-to-t from-slate-900/80 to-transparent"></div>
-            <div class="absolute bottom-6 left-6 text-white z-10">
-                <span class="text-[10px] font-black uppercase tracking-widest bg-emerald-600 px-3 py-1 rounded-full mb-2 inline-block" data-i18n="sun">Sunday</span>
-                <h2 class="text-4xl font-black leading-tight" data-i18n="d2-title">Rest & Villa Rituals</h2>
-            </div>
-        </div>
-        <div class="p-6 space-y-6">
-            <p class="font-semibold italic text-slate-500 text-sm leading-relaxed" data-i18n="d2-intro">First full day to settle in. Focus on a "zero-alarm" morning and enjoying the villa amenities.</p>
-            
-            <div class="grid grid-cols-1 gap-4">
-                <div class="bg-white p-5 rounded-3xl border border-slate-100 flex gap-4">
-                    <div class="w-10 h-10 rounded-full bg-emerald-50 text-emerald-600 flex items-center justify-center flex-shrink-0"><i class="fas fa-sun"></i></div>
+                <div class="flex items-center gap-4 bg-slate-100 p-4 rounded-2xl border border-slate-200">
+                    <div class="w-10 h-10 rounded-full bg-slate-200 text-slate-600 flex items-center justify-center shrink-0"><i class="fas fa-parking"></i></div>
                     <div>
-                        <p class="font-bold text-slate-800" data-i18n="morning">Morning</p>
-                        <p class="text-sm text-slate-500" data-i18n="d2-morning">Long breakfast on the terrace and first pool session.</p>
-                    </div>
-                </div>
-                <div class="bg-white p-5 rounded-3xl border border-slate-100 flex gap-4">
-                    <div class="w-10 h-10 rounded-full bg-blue-50 text-blue-600 flex items-center justify-center flex-shrink-0"><i class="fas fa-moon"></i></div>
-                    <div>
-                        <p class="font-bold text-slate-800" data-i18n="afternoon">Afternoon</p>
-                        <p class="text-sm text-slate-500" data-i18n="d2-afternoon">Nap time for Aelin and a relaxed evening at the villa.</p>
+                        <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest" data-i18n="parking">Parking</p>
+                        <p class="text-sm font-bold text-slate-800 leading-tight" data-i18n="d3-park">Lot: Paseo de la Victoria</p>
                     </div>
                 </div>
             </div>
 
-            <div class="bg-indigo-50 p-6 rounded-[2.5rem] border border-indigo-100">
-                <p class="text-xs font-black text-indigo-800 uppercase tracking-widest mb-3" data-i18n="if-bored">Local Option if bored:</p>
-                <p class="text-sm text-indigo-900 leading-relaxed font-medium" data-i18n="d2-train">The Frigiliana Tourist Train is a great way to see the views of the white village without the steep climb, keeping things easy with the stroller.</p>
-            </div>
-        </div>
-    </div>
-
-    <!-- DAY 3 DETAIL -->
-    <div id="view-day3" class="page-view max-w-md mx-auto">
-        <div class="relative h-64 overflow-hidden img-header">
-            <img src="https://www.hellehollis.com/blog/wp-content/uploads/2022/09/Cordoba-skyline.jpg" class="w-full h-full object-cover">
-            <div class="absolute inset-0 bg-gradient-to-t from-slate-900/80 to-transparent"></div>
-            <div class="absolute bottom-6 left-6 text-white z-10">
-                <span class="text-[10px] font-black uppercase tracking-widest bg-blue-600 px-3 py-1 rounded-full mb-2 inline-block" data-i18n="mon">Monday</span>
-                <h2 class="text-4xl font-black leading-tight">Córdoba</h2>
-            </div>
-        </div>
-        <div class="p-6 space-y-5">
-            <p class="text-sm font-medium text-slate-600 leading-relaxed" data-i18n="d3-desc">A beautiful 2h 10m drive to one of the most unique buildings in the world. The interior is a forest of arches—cool, quiet, and stroller-friendly.</p>
-            
-            <div class="bg-white p-5 rounded-3xl border border-slate-100 flex gap-4 shadow-sm">
-                <div class="w-12 h-12 rounded-2xl bg-red-50 text-red-600 flex items-center justify-center flex-shrink-0"><i class="fas fa-camera"></i></div>
+            <!-- New Fact Block -->
+            <div class="bg-amber-50 p-5 rounded-2xl border border-amber-200 flex gap-4 items-start shadow-sm">
+                <i class="fas fa-landmark text-amber-600 mt-1"></i>
                 <div>
-                    <h4 class="font-bold text-slate-800" data-i18n="must-see">Must See</h4>
-                    <p class="text-xs text-slate-500 mt-1 font-medium" data-i18n="d3-see">The Orange Tree Courtyard (Patio de los Naranjos) is a perfect shaded spot for Aelin to have a break.</p>
-                </div>
-            </div>
-
-            <div class="bg-blue-50 p-5 rounded-3xl border border-blue-100 flex gap-4">
-                <div class="w-12 h-12 rounded-2xl bg-white text-blue-600 flex items-center justify-center flex-shrink-0"><i class="fas fa-parking"></i></div>
-                <div>
-                    <h4 class="font-bold text-blue-900" data-i18n="parking">Parking</h4>
-                    <p class="text-xs text-blue-800 mt-1 font-bold" data-i18n="d3-park">Lot: Paseo de la Victoria</p>
+                    <h4 class="font-bold text-amber-900 text-sm mb-1" data-i18n="d3-tip-title">Mezquita History & Food</h4>
+                    <p class="text-xs text-amber-800 leading-relaxed" data-i18n="d3-tip-desc">The Great Mosque was started in 784 AD. After the Christian conquest of Córdoba in 1236, it was converted into a Catholic church, culminating in the insertion of a Renaissance cathedral nave right in its center in the 16th century! After visiting, grab a famous extra-thick 'Tortilla de Patatas' at Bar Santos right outside the walls.</p>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- DAY 4 DETAIL -->
+    <!-- DAY 4 -->
     <div id="view-day4" class="page-view max-w-md mx-auto">
-        <div class="relative h-64 overflow-hidden img-header">
-            <img src="https://www.spanishlocalmarkets.com/images/markets/Nerja-Markets-spainish-local-markets-2.webp" class="w-full h-full object-cover">
-            <div class="absolute inset-0 bg-gradient-to-t from-slate-900/80 to-transparent"></div>
-            <div class="absolute bottom-6 left-6 text-white z-10">
-                <span class="text-[10px] font-black uppercase tracking-widest bg-emerald-600 px-3 py-1 rounded-full mb-2 inline-block" data-i18n="tue">Tuesday</span>
-                <h2 class="text-4xl font-black leading-tight" data-i18n="d4-title">Poolside & Local</h2>
+        <button onclick="showView('main')" class="m-5 bg-white shadow-sm border border-slate-100 text-slate-600 px-4 py-2 rounded-full text-sm font-bold flex items-center gap-2 hover:bg-slate-50 active:scale-95">
+            <i class="fas fa-arrow-left"></i> <span data-i18n="back">Back</span>
+        </button>
+        <div class="px-6 pb-6 space-y-6">
+            <div>
+                <span class="text-pink-500 font-black text-[10px] uppercase tracking-widest" data-i18n="tue">Tuesday</span>
+                <h2 class="text-4xl font-black text-slate-800 leading-tight" data-i18n="d4-title">Poolside & Local Vibes</h2>
             </div>
-        </div>
-        <div class="p-6 space-y-6">
-            <p class="text-sm font-medium text-slate-600 italic" data-i18n="d4-intro">Mid-week recharge. Perfect day for a BBQ lunch at the villa.</p>
-            <div class="bg-white p-6 rounded-[2.5rem] border border-slate-100 shadow-sm space-y-5">
-                <div class="flex gap-4">
-                    <i class="fas fa-shopping-basket text-blue-500 text-lg"></i>
-                    <div>
-                        <h4 class="font-bold text-slate-800" data-i18n="d4-opt1">Nerja Market</h4>
-                        <p class="text-xs text-slate-500 font-medium" data-i18n="d4-opt1-sub">Tuesdays, 10am-2pm. Great for local vibe.</p>
-                    </div>
+
+            <p class="text-slate-600 font-medium leading-relaxed bg-white p-5 rounded-3xl border border-slate-100 shadow-sm" data-i18n="d4-intro">Mid-week recharge. Perfect day for a BBQ lunch at the villa.</p>
+
+            <div class="space-y-4">
+                <div class="bg-pink-50 p-5 rounded-[2rem] border border-pink-100">
+                    <h4 class="font-black text-pink-900 text-lg flex items-center gap-2 mb-1"><i class="fas fa-shopping-bag"></i> <span data-i18n="d4-opt1">Nerja Market</span></h4>
+                    <p class="text-sm text-pink-800 font-medium" data-i18n="d4-opt1-sub">Tuesdays, 10am-2pm. Great for local vibe.</p>
                 </div>
-                <div class="flex gap-4 border-t pt-5">
-                    <i class="fas fa-umbrella-beach text-blue-500 text-lg"></i>
-                    <div>
-                        <h4 class="font-bold text-slate-800" data-i18n="d4-opt2">Burriana Beach</h4>
-                        <p class="text-xs text-slate-500 font-medium" data-i18n="d4-opt2-sub">Afternoon walk; the promenade is wide and flat, perfect for sunset with the stroller.</p>
-                    </div>
+                
+                <div class="bg-blue-50 p-5 rounded-[2rem] border border-blue-100">
+                    <h4 class="font-black text-blue-900 text-lg flex items-center gap-2 mb-1"><i class="fas fa-water"></i> <span data-i18n="d4-opt2">Burriana Beach</span></h4>
+                    <p class="text-sm text-blue-800 font-medium" data-i18n="d4-opt2-sub">Afternoon walk; the promenade is wide and flat, perfect for sunset with the stroller.</p>
+                </div>
+            </div>
+
+            <!-- New Fact Block -->
+            <div class="bg-rose-50 p-5 rounded-2xl border border-rose-100 flex gap-4 items-start shadow-sm">
+                <i class="fas fa-store text-rose-500 mt-1"></i>
+                <div>
+                    <h4 class="font-bold text-rose-900 text-sm mb-1" data-i18n="d4-tip-title">Market Finds & Churros</h4>
+                    <p class="text-xs text-rose-800 leading-relaxed" data-i18n="d4-tip-desc">At the Tuesday market (located in the Almijara area), look out for vibrant Andalusian ceramics, fresh local olives, and spices. It's a busy, colorful affair. Afterwards, treat yourselves to traditional Spanish Churros con Chocolate at a local café—a perfectly sweet midday energy boost.</p>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- DAY 5 DETAIL -->
+    <!-- DAY 5 -->
     <div id="view-day5" class="page-view max-w-md mx-auto">
-        <div class="relative h-64 overflow-hidden img-header">
-            <img src="https://dynamic-media.tacdn.com/media/photo-o/30/e4/5a/0a/caption.jpg?w=700&h=500&s=1" class="w-full h-full object-cover">
-            <div class="absolute inset-0 bg-gradient-to-t from-slate-900/80 to-transparent"></div>
-            <div class="absolute bottom-6 left-6 text-white z-10">
-                <span class="text-[10px] font-black uppercase tracking-widest bg-blue-600 px-3 py-1 rounded-full mb-2 inline-block" data-i18n="wed">Wednesday</span>
-                <h2 class="text-4xl font-black leading-tight">Ronda & Setenil</h2>
+        <button onclick="showView('main')" class="m-5 bg-white shadow-sm border border-slate-100 text-slate-600 px-4 py-2 rounded-full text-sm font-bold flex items-center gap-2 hover:bg-slate-50 active:scale-95">
+            <i class="fas fa-arrow-left"></i> <span data-i18n="back">Back</span>
+        </button>
+        <div class="px-6 pb-6 space-y-6">
+            <div>
+                <span class="text-purple-500 font-black text-[10px] uppercase tracking-widest" data-i18n="wed">Wednesday</span>
+                <h2 class="text-4xl font-black text-slate-800 leading-tight" data-i18n="d5-title">Ronda & Setenil</h2>
             </div>
-        </div>
-        <div class="p-6 space-y-5">
-            <div class="bg-white p-5 rounded-3xl border border-slate-100 shadow-sm">
-                <h4 class="font-bold text-slate-800 mb-2">Setenil de las Bodegas</h4>
-                <p class="text-sm text-slate-500 font-medium leading-relaxed" data-i18n="d5-setenil">A stunning town built into the cliffs. Stick to the riverbed streets for easier stroller access.</p>
+
+            <div class="bg-purple-50 p-6 rounded-[2.5rem] border border-purple-100 shadow-sm relative overflow-hidden">
+                <div class="absolute -right-4 -top-4 w-24 h-24 bg-purple-200 rounded-full opacity-50"></div>
+                <h3 class="font-black text-purple-900 text-xl mb-3 relative z-10">Setenil de las Bodegas</h3>
+                <p class="text-sm text-purple-800 font-medium relative z-10" data-i18n="d5-setenil">A stunning town built into the cliffs. Stick to the riverbed streets for easier stroller access.</p>
             </div>
-            <div class="bg-white p-5 rounded-3xl border border-slate-100 shadow-sm">
-                <h4 class="font-bold text-slate-800 mb-2">Ronda</h4>
-                <p class="text-sm text-slate-500 font-medium leading-relaxed" data-i18n="d5-ronda">Head to the Alameda del Tajo park for a flat, shaded walk that leads to incredible balconies overlooking the valley and bridge.</p>
+
+            <div class="bg-white p-6 rounded-[2.5rem] border border-slate-200 shadow-sm">
+                <h3 class="font-black text-slate-800 text-xl mb-3">Ronda</h3>
+                <p class="text-sm text-slate-600 font-medium mb-4" data-i18n="d5-ronda">Head to the Alameda del Tajo park for a flat, shaded walk that leads to incredible balconies overlooking the valley and bridge.</p>
+                <div class="bg-slate-50 p-3 rounded-xl border border-slate-100 flex items-center gap-3">
+                    <i class="fas fa-exclamation-triangle text-amber-500"></i>
+                    <p class="text-xs font-bold text-slate-700" data-i18n="d5-note">Note: A carrier for Aelin is best for gorge paths.</p>
+                </div>
             </div>
-            <div class="bg-amber-50 p-5 rounded-3xl border border-amber-200">
-                <p class="text-xs text-amber-900 font-bold"><i class="fas fa-baby mr-2"></i> <span data-i18n="d5-note">Note: A carrier for Aelin is best for gorge paths.</span></p>
-                <p class="text-[10px] mt-2 font-bold text-amber-700 uppercase"><i class="fas fa-parking mr-1"></i> <span data-i18n="parking">Parking</span>: Martínez Astein</p>
+
+            <!-- New Fact Block -->
+            <div class="bg-indigo-50 p-5 rounded-2xl border border-indigo-100 flex gap-4 items-start shadow-sm">
+                <i class="fas fa-mountain text-indigo-500 mt-1"></i>
+                <div>
+                    <h4 class="font-bold text-indigo-900 text-sm mb-1" data-i18n="d5-tip-title">Engineering Marvels</h4>
+                    <p class="text-xs text-indigo-800 leading-relaxed" data-i18n="d5-tip-desc">Ronda's 'Puente Nuevo' (New Bridge) is over 100 meters deep and took 34 years to build, finally completing in 1793. Meanwhile, in Setenil, the unique houses aren't just built *next* to rocks—they utilize natural overhangs as their actual roofs, a design that keeps them naturally cool during the scorching Andalusian summers.</p>
+                </div>
             </div>
         </div>
     </div>
 
-    <!-- DAY 6 DETAIL -->
+    <!-- DAY 6 -->
     <div id="view-day6" class="page-view max-w-md mx-auto">
-        <div class="bg-slate-900 text-white p-8 rounded-b-[3.5rem] relative overflow-hidden">
-            <div class="relative z-10">
-                <p class="text-[10px] font-black uppercase text-blue-400 tracking-widest mb-2" data-i18n="thu-highlight">Thu 30 Apr • Grand Highlight</p>
-                <h2 class="text-4xl font-black mb-4">The Alhambra</h2>
-                <p class="text-sm opacity-80 leading-relaxed font-medium" data-i18n="d6-intro">The crown jewel of Andalusia. The Nasrid Palaces require a specific time slot—be punctual!</p>
+        <button onclick="showView('main')" class="m-5 bg-white shadow-sm border border-slate-100 text-slate-600 px-4 py-2 rounded-full text-sm font-bold flex items-center gap-2 hover:bg-slate-50 active:scale-95">
+            <i class="fas fa-arrow-left"></i> <span data-i18n="back">Back</span>
+        </button>
+        <div class="px-6 pb-6 space-y-6">
+            <div>
+                <span class="text-amber-500 font-black text-[10px] uppercase tracking-widest" data-i18n="thu-highlight">Thu 30 Apr • Grand Highlight</span>
+                <h2 class="text-4xl font-black text-slate-800 leading-tight" data-i18n="d6-title">Granada: The Alhambra</h2>
             </div>
-            <i class="fas fa-chess-rook absolute -right-6 -bottom-6 text-[12rem] opacity-5"></i>
-        </div>
-        <div class="p-6 space-y-4">
-            <div class="bg-white p-6 rounded-[2.5rem] border border-slate-100 shadow-sm space-y-4">
-                <div class="flex gap-4">
-                    <i class="fas fa-ban text-red-500 mt-1"></i>
-                    <p class="text-sm text-slate-600 font-medium"><strong data-i18n="d6-rule1-title">Palaces:</strong> <span data-i18n="d6-rule1">Strollers are forbidden inside the palaces; you'll need the carrier.</span></p>
+
+            <p class="text-slate-600 font-medium leading-relaxed bg-white p-5 rounded-3xl border border-slate-100 shadow-sm" data-i18n="d6-intro">The crown jewel of Andalusia. The Nasrid Palaces require a specific time slot—be punctual!</p>
+
+            <div class="bg-amber-50 p-6 rounded-[2.5rem] border border-amber-200 shadow-sm space-y-4">
+                <h3 class="font-black text-amber-900 text-lg flex items-center gap-2"><i class="fas fa-clipboard-list"></i> Alhambra Rules</h3>
+                <div class="space-y-3 text-sm font-medium text-amber-900">
+                    <p class="flex items-start gap-2"><i class="fas fa-times text-red-500 mt-1"></i> <span><strong data-i18n="d6-rule1-title">Palaces:</strong> <span data-i18n="d6-rule1">Strollers are forbidden inside the palaces; you'll need the carrier.</span></span></p>
+                    <p class="flex items-start gap-2"><i class="fas fa-check text-emerald-500 mt-1"></i> <span><strong data-i18n="d6-rule2-title">Gardens:</strong> <span data-i18n="d6-rule2">The Generalife gardens are mostly accessible with wheels.</span></span></p>
                 </div>
-                <div class="flex gap-4 border-t pt-4">
-                    <i class="fas fa-tree text-emerald-500 mt-1"></i>
-                    <p class="text-sm text-slate-600 font-medium"><strong data-i18n="d6-rule2-title">Gardens:</strong> <span data-i18n="d6-rule2">The Generalife gardens are mostly accessible with wheels.</span></p>
-                </div>
-                <div class="flex gap-4 border-t pt-4 bg-orange-50 -mx-6 px-6 py-4 rounded-b-[2.5rem]">
-                    <i class="fas fa-shopping-basket text-orange-500 mt-1"></i>
-                    <p class="text-sm text-orange-900 font-black" data-i18n="d6-rule3">Essential: Do your big grocery shop today! Tomorrow is a holiday.</p>
+                <div class="mt-4 pt-4 border-t border-amber-200/50">
+                    <p class="text-xs font-black text-red-600 uppercase flex items-center gap-2"><i class="fas fa-shopping-cart"></i> <span data-i18n="d6-rule3">Essential: Do your big grocery shop today! Tomorrow is a holiday.</span></p>
                 </div>
             </div>
-            
-            <div class="bg-blue-50 p-6 rounded-[2.5rem] border border-blue-100">
-                <p class="text-[10px] font-black text-blue-800 uppercase mb-2" data-i18n="plan-b">Plan B (No tickets):</p>
-                <p class="text-sm text-blue-800 leading-relaxed font-medium" data-i18n="d6-planb">Lazy morning at villa. Afternoon in Frigiliana for a rooftop lunch, or visit the Nerja Caves (naturally cool and easy).</p>
+
+            <!-- New Fact Block -->
+            <div class="bg-yellow-50 p-5 rounded-2xl border border-yellow-200 flex gap-4 items-start shadow-sm">
+                <i class="fas fa-chess-rook text-yellow-600 mt-1"></i>
+                <div>
+                    <h4 class="font-bold text-yellow-900 text-sm mb-1" data-i18n="d6-tip-title">The Red Fortress</h4>
+                    <p class="text-xs text-yellow-800 leading-relaxed" data-i18n="d6-tip-desc">The Alhambra (from Arabic 'Al-Ḥamrāʾ', meaning 'The Red One') was the last Moorish stronghold in Spain, falling to the Catholic Monarchs in 1492. It inspired Washington Irving's famous 'Tales of the Alhambra'. Pay close attention to the intricate, mathematical perfection of the stucco work and the soothing use of water features throughout.</p>
+                </div>
+            </div>
+
+            <div class="bg-slate-100 p-5 rounded-3xl border border-slate-200 border-dashed">
+                <h4 class="font-black text-slate-700 text-sm mb-2" data-i18n="plan-b">Plan B (No tickets):</h4>
+                <p class="text-xs text-slate-600 font-medium" data-i18n="d6-planb">Lazy morning at villa. Afternoon in Frigiliana for a rooftop lunch, or visit the Nerja Caves (naturally cool and easy).</p>
             </div>
         </div>
     </div>
 
     <!-- DAY 7 DETAIL -->
     <div id="view-day7" class="page-view max-w-md mx-auto">
-        <div class="p-6 space-y-6">
+        <button onclick="showView('main')" class="m-5 bg-white shadow-sm border border-slate-100 text-slate-600 px-4 py-2 rounded-full text-sm font-bold flex items-center gap-2 hover:bg-slate-50 active:scale-95">
+            <i class="fas fa-arrow-left"></i> <span data-i18n="back">Back</span>
+        </button>
+        <div class="px-6 pb-6 space-y-6">
             <div class="bg-red-50 p-6 rounded-[2.5rem] border border-red-100">
                 <h3 class="text-2xl font-black text-red-900 mb-2" data-i18n="labor-day">Labor Day</h3>
                 <p class="text-sm text-red-800 font-bold mb-4 italic" data-i18n="labor-warn">Shops are closed! Use up villa supplies.</p>
@@ -500,6 +486,80 @@
                     </div>
                 </div>
             </div>
+
+             <!-- New Fact Block -->
+             <div class="bg-rose-50 p-5 rounded-2xl border border-rose-100 flex gap-4 items-start shadow-sm">
+                <i class="fas fa-glass-cheers text-rose-500 mt-1"></i>
+                <div>
+                    <h4 class="font-bold text-rose-900 text-sm mb-1" data-i18n="d7-tip-title">Día del Trabajador</h4>
+                    <p class="text-xs text-rose-800 leading-relaxed" data-i18n="d7-tip-desc">May 1st is taken very seriously in Spain. Supermarkets and major attractions will be firmly shut. However, restaurants and beach 'Chiringuitos' often stay open and get busy with local families. If you fancy venturing out, head to Burriana beach for a massive, wood-fire cooked Paella at the famous 'Ayo'.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- INFO VIEW -->
+    <div id="view-info" class="page-view max-w-md mx-auto p-5 space-y-6">
+        <header>
+            <h2 class="text-3xl font-black text-slate-800" data-i18n="info-title">Travel Info</h2>
+            <p class="text-xs font-bold text-blue-600 uppercase tracking-widest mt-1" data-i18n="info-sub">Nerja, Villa & Baby Tips</p>
+        </header>
+
+        <div class="space-y-5">
+
+            <div class="bg-white p-6 rounded-[2.5rem] shadow-sm border border-slate-100">
+                <h3 class="font-black text-xl text-slate-800 mb-2">Villa Felix Dos</h3>
+                <p class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-4">Solmar Villas • Nerja</p>
+                <p class="text-sm text-slate-600 leading-relaxed font-medium mb-4" data-i18n="villa-desc">A beautiful Solmar Villa offering a private pool, stunning views, and plenty of space for the family. Located conveniently in Nerja, providing easy access to local beaches and the town center.</p>
+                <button onclick="window.open('https://www.solmarvillas.com/qr/villa-book/VmlsbGEgRmVsaXggRG9z', '_blank')" class="w-full bg-blue-50 text-blue-600 font-bold py-3 rounded-2xl text-sm flex items-center justify-center gap-2 transition-transform active:scale-95">
+                    <i class="fas fa-map-marker-alt"></i> <span data-i18n="view-map-btn">View Villa Brochure (EN)</span>
+                </button>
+            </div>
+            <!-- Discovering Nerja Block -->
+            <div class="bg-blue-50 p-6 rounded-[2.5rem] shadow-sm border border-blue-100">
+                <h3 class="font-black text-lg text-blue-900 mb-3 flex items-center gap-2"><i class="fas fa-compass"></i> <span data-i18n="nerja-guide-title">Discovering Nerja</span></h3>
+                <p class="text-sm text-blue-800 font-medium leading-relaxed mb-4" data-i18n="nerja-guide-desc">Unlike much of the Costa del Sol, Nerja has escaped the high-rise concrete hotels. It retains a traditional charm with its whitewashed houses and narrow streets.</p>
+                <ul class="space-y-3 text-sm text-blue-800 font-medium">
+                    <li class="flex gap-3"><i class="fas fa-star mt-1 text-blue-500"></i> <span data-i18n="n-tip1"><strong>Balcón de Europa:</strong> A magnificent promenade built on the edge of a cliff, offering panoramic views of the Mediterranean. Great for evening strolls.</span></li>
+                    <li class="flex gap-3"><i class="fas fa-utensils mt-1 text-blue-500"></i> <span data-i18n="n-tip2"><strong>Tapas Culture:</strong> In many traditional Nerja bars, you still get a free 'tapa' (small snack) with every drink you order.</span></li>
+                </ul>
+            </div>
+
+            <!-- Spanish Culture Block -->
+            <div class="bg-purple-50 p-6 rounded-[2.5rem] border border-purple-100 shadow-sm">
+                <h3 class="font-black text-lg text-purple-900 mb-3 flex items-center gap-2"><i class="fas fa-clock"></i> <span data-i18n="culture-tips-title">Spanish Culture & Dining</span></h3>
+                <ul class="space-y-3 text-sm text-purple-800 font-medium">
+                    <li class="flex gap-3"><i class="fas fa-bed mt-1 text-purple-500"></i> <span data-i18n="c-tip1"><strong>The Siesta:</strong> It's real! Many small shops and businesses close between 14:00 and 17:00. Plan shopping accordingly.</span></li>
+                    <li class="flex gap-3"><i class="fas fa-wine-glass mt-1 text-purple-500"></i> <span data-i18n="c-tip2"><strong>Dining Times:</strong> Spaniards eat late. Lunch is the main meal (around 14:00). Dinner rarely starts before 20:30 or 21:00.</span></li>
+                    <li class="flex gap-3"><i class="fas fa-coins mt-1 text-purple-500"></i> <span data-i18n="c-tip3"><strong>Tipping:</strong> A 10% tip is appreciated for good service in sit-down restaurants, but not strictly mandatory. For cafes/bars, just leave the small change.</span></li>
+                </ul>
+            </div>
+
+            <div class="bg-orange-50 p-6 rounded-[2.5rem] border border-orange-100 shadow-sm">
+                <h3 class="font-black text-lg text-orange-900 mb-3 flex items-center gap-2"><i class="fas fa-baby"></i> <span data-i18n="baby-tips-title">First Time Baby Tips</span></h3>
+                <ul class="space-y-3 text-sm text-orange-800 font-medium">
+                    <li class="flex gap-3"><i class="fas fa-check mt-1 text-orange-500"></i> <span data-i18n="bt1">Bring a baby carrier! Strollers are great for promenades, but useless in the Alhambra palaces or steep Frigiliana streets.</span></li>
+                    <li class="flex gap-3"><i class="fas fa-check mt-1 text-orange-500"></i> <span data-i18n="bt2">Spanish supermarkets (Mercadona, Supersol) have excellent baby aisles for nappies and formula.</span></li>
+                    <li class="flex gap-3"><i class="fas fa-check mt-1 text-orange-500"></i> <span data-i18n="bt3">Dining out is very baby-friendly in Spain; locals love kids and restaurants usually accommodate high chairs.</span></li>
+                </ul>
+            </div>
+
+            <div class="bg-emerald-50 p-6 rounded-[2.5rem] border border-emerald-100 shadow-sm">
+                <h3 class="font-black text-lg text-emerald-900 mb-3 flex items-center gap-2"><i class="fas fa-car"></i> <span data-i18n="travel-tips-title">Local Travel Info</span></h3>
+                <ul class="space-y-3 text-sm text-emerald-800 font-medium">
+                    <li class="flex gap-3"><i class="fas fa-info-circle mt-1 text-emerald-500"></i> <span data-i18n="tt1">Always carry some cash (Euros) for small parking lots or rural cafes.</span></li>
+                    <li class="flex gap-3"><i class="fas fa-info-circle mt-1 text-emerald-500"></i> <span data-i18n="tt2">Toll roads (AP-7) accept card payments and are usually much faster and quieter than coastal roads.</span></li>
+                </ul>
+            </div>
+
+             <!-- Health & Emergency -->
+             <div class="bg-red-50 p-6 rounded-[2.5rem] border border-red-100 shadow-sm">
+                <h3 class="font-black text-lg text-red-900 mb-3 flex items-center gap-2"><i class="fas fa-first-aid"></i> <span data-i18n="health-title">Health & Emergencies</span></h3>
+                <ul class="space-y-3 text-sm text-red-800 font-medium">
+                    <li class="flex gap-3"><i class="fas fa-phone mt-1 text-red-500"></i> <span data-i18n="h-tip1"><strong>Emergency:</strong> Dial 112 for all emergencies (operators speak English).</span></li>
+                    <li class="flex gap-3"><i class="fas fa-plus-square mt-1 text-red-500"></i> <span data-i18n="h-tip2"><strong>Pharmacies:</strong> Look for the glowing green cross ("Farmacia"). They are highly trained and can advise on minor ailments for the baby. There is always an "on-duty" 24hr pharmacy listed on the door of closed ones.</span></li>
+                </ul>
+            </div>
         </div>
     </div>
 
@@ -507,10 +567,10 @@
     <div id="view-map" class="page-view max-w-md mx-auto p-5 space-y-6">
         <header>
             <h2 class="text-3xl font-black text-slate-800" data-i18n="map-title">Explore Andalusia</h2>
-            <p class="text-xs font-bold text-blue-600 uppercase tracking-widest mt-1" data-i18n="map-sub">Tap to navigate to Baby-Friendly Parking</p>
+            <p class="text-xs font-bold text-blue-600 uppercase tracking-widest mt-1" data-i18n="map-sub">Tap to navigate</p>
         </header>
         
-        <div class="h-64 rounded-[3rem] overflow-hidden shadow-xl border-4 border-white">
+        <div class="h-64 rounded-[3rem] overflow-hidden shadow-xl border border-slate-200">
             <iframe 
                 src="https://maps.google.com/maps?q=Villa%20Felix%20Dos,%20Nerja,%20Spain&t=&z=14&ie=UTF8&iwloc=&output=embed" 
                 style="border:0; width: 100%; height: 100%;" 
@@ -521,11 +581,29 @@
         <div class="space-y-3">
             <h3 class="text-[10px] font-black uppercase tracking-widest text-slate-400 px-4" data-i18n="nav-links">Navigation Links</h3>
             
+            <div onclick="window.open('https://maps.google.com/?daddr=Villa+Felix+Dos,+Nerja', '_blank')" class="day-card bg-white p-5 rounded-3xl flex items-center gap-4 cursor-pointer">
+                <div class="w-10 h-10 rounded-full bg-blue-50 flex items-center justify-center text-blue-600"><i class="fas fa-home"></i></div>
+                <div class="flex-1">
+                    <h4 class="font-bold text-slate-800 text-sm">Villa Felix Dos</h4>
+                    <p class="text-[10px] text-slate-400 font-bold uppercase" data-i18n="p-villa">Nerja Basecamp</p>
+                </div>
+                <i class="fas fa-external-link-alt text-slate-300 text-[10px]"></i>
+            </div>
+
             <div onclick="window.open('https://maps.google.com/?daddr=Parking+Balcon+de+Europa,Nerja', '_blank')" class="day-card bg-white p-5 rounded-3xl flex items-center gap-4 cursor-pointer">
                 <div class="w-10 h-10 rounded-full bg-blue-50 flex items-center justify-center text-blue-600"><i class="fas fa-parking"></i></div>
                 <div class="flex-1">
                     <h4 class="font-bold text-slate-800 text-sm">Nerja Center</h4>
                     <p class="text-[10px] text-slate-400 font-bold uppercase" data-i18n="p1">Parking Balcón de Europa</p>
+                </div>
+                <i class="fas fa-external-link-alt text-slate-300 text-[10px]"></i>
+            </div>
+            
+            <div onclick="window.open('https://maps.google.com/?daddr=Burriana+Beach,Nerja', '_blank')" class="day-card bg-white p-5 rounded-3xl flex items-center gap-4 cursor-pointer">
+                <div class="w-10 h-10 rounded-full bg-blue-50 flex items-center justify-center text-blue-600"><i class="fas fa-umbrella-beach"></i></div>
+                <div class="flex-1">
+                    <h4 class="font-bold text-slate-800 text-sm">Burriana Beach</h4>
+                    <p class="text-[10px] text-slate-400 font-bold uppercase" data-i18n="p-burriana">Nerja's Main Beach</p>
                 </div>
                 <i class="fas fa-external-link-alt text-slate-300 text-[10px]"></i>
             </div>
@@ -547,6 +625,33 @@
                 </div>
                 <i class="fas fa-external-link-alt text-slate-300 text-[10px]"></i>
             </div>
+
+            <div onclick="window.open('https://maps.google.com/?daddr=Parking+Martinez+Astein,Ronda', '_blank')" class="day-card bg-white p-5 rounded-3xl flex items-center gap-4 cursor-pointer">
+                <div class="w-10 h-10 rounded-full bg-purple-50 flex items-center justify-center text-purple-600"><i class="fas fa-parking"></i></div>
+                <div class="flex-1">
+                    <h4 class="font-bold text-slate-800 text-sm">Ronda</h4>
+                    <p class="text-[10px] text-slate-400 font-bold uppercase" data-i18n="p-ronda">Parking Martínez Astein</p>
+                </div>
+                <i class="fas fa-external-link-alt text-slate-300 text-[10px]"></i>
+            </div>
+
+            <div onclick="window.open('https://maps.google.com/?daddr=Setenil+de+las+Bodegas', '_blank')" class="day-card bg-white p-5 rounded-3xl flex items-center gap-4 cursor-pointer">
+                <div class="w-10 h-10 rounded-full bg-amber-50 flex items-center justify-center text-amber-600"><i class="fas fa-map-pin"></i></div>
+                <div class="flex-1">
+                    <h4 class="font-bold text-slate-800 text-sm">Setenil de las Bodegas</h4>
+                    <p class="text-[10px] text-slate-400 font-bold uppercase" data-i18n="p-setenil">Town Center</p>
+                </div>
+                <i class="fas fa-external-link-alt text-slate-300 text-[10px]"></i>
+            </div>
+
+            <div onclick="window.open('https://maps.google.com/?daddr=The+Alhambra,Granada', '_blank')" class="day-card bg-white p-5 rounded-3xl flex items-center gap-4 cursor-pointer">
+                <div class="w-10 h-10 rounded-full bg-red-50 flex items-center justify-center text-red-600"><i class="fas fa-monument"></i></div>
+                <div class="flex-1">
+                    <h4 class="font-bold text-slate-800 text-sm">Granada</h4>
+                    <p class="text-[10px] text-slate-400 font-bold uppercase" data-i18n="p-alhambra">The Alhambra Parking</p>
+                </div>
+                <i class="fas fa-external-link-alt text-slate-300 text-[10px]"></i>
+            </div>
         </div>
     </div>
 
@@ -554,55 +659,79 @@
     <div id="view-logistics" class="page-view max-w-md mx-auto p-5 space-y-8">
         <header>
             <h2 class="text-3xl font-black text-slate-800" data-i18n="log-title">Flights</h2>
+            <p class="text-xs font-bold text-blue-600 uppercase tracking-widest mt-1" data-i18n="log-sub">Tap to track flight live</p>
         </header>
 
         <div class="space-y-6">
             <!-- AMS Group -->
             <div class="space-y-4">
                 <h3 class="text-[10px] font-black uppercase text-blue-600 tracking-widest px-2" data-i18n="ams-fl">Amsterdam Group</h3>
-                <div class="bg-white p-6 rounded-[2.5rem] border border-slate-100 shadow-sm relative overflow-hidden">
+                <a href="https://www.flightradar24.com/data/flights/hv6115" target="_blank" class="block bg-white p-6 rounded-[2.5rem] border border-slate-100 shadow-sm relative overflow-hidden transition-all hover:-translate-y-1 hover:shadow-lg active:scale-95">
                     <div class="absolute top-0 right-0 p-3 bg-blue-50 text-blue-600 font-black text-[9px] uppercase rounded-bl-xl">HV6115</div>
                     <p class="text-[10px] font-bold text-slate-400 uppercase mb-4" data-i18n="outbound">Outbound • Sat 25 Apr</p>
                     <div class="flex justify-between items-center">
-                        <div class="text-center"><p class="text-2xl font-black">05:25</p><p class="text-[9px] font-bold text-slate-400 uppercase">AMS</p></div>
-                        <i class="fas fa-plane text-slate-100 text-xl"></i>
-                        <div class="text-center"><p class="text-2xl font-black text-blue-900">08:25</p><p class="text-[9px] font-bold text-slate-400 uppercase text-right">AGP</p></div>
+                        <div class="text-center"><p class="text-2xl font-black text-slate-800">05:25</p><p class="text-[9px] font-bold text-slate-400 uppercase">AMS</p></div>
+                        <i class="fas fa-plane text-slate-200 text-xl"></i>
+                        <div class="text-center"><p class="text-2xl font-black text-blue-600">08:25</p><p class="text-[9px] font-bold text-slate-400 uppercase text-right">AGP</p></div>
                     </div>
-                </div>
-                <div class="bg-white p-6 rounded-[2.5rem] border border-slate-100 shadow-sm relative overflow-hidden">
+                </a>
+                <a href="https://www.flightradar24.com/data/flights/hv6228" target="_blank" class="block bg-white p-6 rounded-[2.5rem] border border-slate-100 shadow-sm relative overflow-hidden transition-all hover:-translate-y-1 hover:shadow-lg active:scale-95">
                     <div class="absolute top-0 right-0 p-3 bg-orange-50 text-orange-600 font-black text-[9px] uppercase rounded-bl-xl">HV6228</div>
                     <p class="text-[10px] font-bold text-slate-400 uppercase mb-4" data-i18n="return">Return • Fri 01 May</p>
                     <div class="flex justify-between items-center">
-                        <div class="text-center"><p class="text-2xl font-black">23:30</p><p class="text-[9px] font-bold text-slate-400 uppercase">AGP</p></div>
-                        <i class="fas fa-plane text-slate-100 text-xl"></i>
-                        <div class="text-center"><p class="text-2xl font-black text-orange-600">02:40</p><p class="text-[9px] font-bold text-slate-400 uppercase text-right">AMS</p></div>
+                        <div class="text-center"><p class="text-2xl font-black text-slate-800">23:30</p><p class="text-[9px] font-bold text-slate-400 uppercase">AGP</p></div>
+                        <i class="fas fa-plane text-slate-200 text-xl"></i>
+                        <div class="text-center"><p class="text-2xl font-black text-orange-500">02:40</p><p class="text-[9px] font-bold text-slate-400 uppercase text-right">AMS</p></div>
                     </div>
                     <p class="text-[8px] text-slate-400 mt-3 font-bold text-center italic" data-i18n="sat-note">* Lands early morning SAT 2 MAY</p>
-                </div>
+                </a>
             </div>
             
             <!-- MAN Group -->
             <div class="space-y-4">
                 <h3 class="text-[10px] font-black uppercase text-indigo-600 tracking-widest px-2" data-i18n="man-fl">Manchester Group</h3>
-                <div class="bg-indigo-900 text-white p-6 rounded-[2.5rem] shadow-lg relative overflow-hidden">
+                
+                <a href="https://www.flightradar24.com/data/flights/fr3240" target="_blank" class="block bg-indigo-900 text-white p-6 rounded-[2.5rem] shadow-lg relative overflow-hidden transition-all hover:-translate-y-1 hover:shadow-xl active:scale-95">
+                    <div class="absolute top-0 right-0 p-3 bg-white/10 text-white font-black text-[9px] uppercase rounded-bl-xl">FR3240</div>
+                    <p class="text-[10px] font-bold text-white/50 uppercase mb-4" data-i18n="outbound-man">Outbound • Fri 24 Apr</p>
+                    <div class="flex justify-between items-center">
+                        <div class="text-center"><p class="text-2xl font-black">16:15</p><p class="text-[9px] font-bold text-white/50 uppercase">MAN</p></div>
+                        <i class="fas fa-plane text-white/20 text-xl"></i>
+                        <div class="text-center"><p class="text-2xl font-black">20:15</p><p class="text-[9px] font-bold text-white/50 uppercase text-right">AGP</p></div>
+                    </div>
+                </a>
+
+                <a href="https://www.flightradar24.com/data/flights/fr7261" target="_blank" class="block bg-indigo-900 text-white p-6 rounded-[2.5rem] shadow-lg relative overflow-hidden transition-all hover:-translate-y-1 hover:shadow-xl active:scale-95">
                     <div class="absolute top-0 right-0 p-3 bg-white/10 text-white font-black text-[9px] uppercase rounded-bl-xl">FR7261</div>
                     <p class="text-[10px] font-bold text-white/50 uppercase mb-4" data-i18n="return">Return • Fri 01 May</p>
                     <div class="flex justify-between items-center">
                         <div class="text-center"><p class="text-2xl font-black">22:50</p><p class="text-[9px] font-bold text-white/50 uppercase">AGP</p></div>
-                        <i class="fas fa-plane text-white/10 text-xl"></i>
+                        <i class="fas fa-plane text-white/20 text-xl"></i>
                         <div class="text-center"><p class="text-2xl font-black">00:50</p><p class="text-[9px] font-bold text-white/50 uppercase text-right">MAN</p></div>
                     </div>
-                </div>
+                </a>
             </div>
         </div>
     </div>
 
     <!-- Navigation Bar -->
-    <div class="fixed bottom-6 left-1/2 -translate-x-1/2 w-[92%] max-w-md glass rounded-[2.5rem] shadow-2xl z-[100] px-8 py-5 flex justify-between items-center">
-        <button onclick="showView('main')" id="nav-main" class="nav-btn active"><i class="fas fa-calendar-alt text-xl"></i></button>
-        <button onclick="showView('map')" id="nav-map" class="nav-btn"><i class="fas fa-map-marked-alt text-xl"></i></button>
-        <button onclick="showView('logistics')" id="nav-logistics" class="nav-btn"><i class="fas fa-plane text-xl"></i></button>
-        <button onclick="showView('day2')" id="nav-info" class="nav-btn"><i class="fas fa-info-circle text-xl"></i></button>
+    <div class="fixed bottom-6 left-1/2 -translate-x-1/2 w-[92%] max-w-md glass rounded-full z-[100] px-8 py-4 flex justify-between items-center">
+        <button onclick="showView('main')" id="nav-main" class="nav-btn active">
+            <i class="fas fa-calendar-alt text-xl"></i>
+            <span class="text-[9px] font-bold mt-1">Plan</span>
+        </button>
+        <button onclick="showView('map')" id="nav-map" class="nav-btn">
+            <i class="fas fa-map-marked-alt text-xl"></i>
+            <span class="text-[9px] font-bold mt-1">Map</span>
+        </button>
+        <button onclick="showView('logistics')" id="nav-logistics" class="nav-btn">
+            <i class="fas fa-plane text-xl"></i>
+            <span class="text-[9px] font-bold mt-1">Flights</span>
+        </button>
+        <button onclick="showView('info')" id="nav-info" class="nav-btn">
+            <i class="fas fa-info-circle text-xl"></i>
+            <span class="text-[9px] font-bold mt-1">Info</span>
+        </button>
     </div>
 
     <script>
@@ -610,74 +739,122 @@
             en: {
                 dates: "25 Apr — 01 May • Family Trip", back: "Back", schedule: "The Schedule", subtitle: "Tap any day for full details.",
                 sat: "Saturday", sun: "Sunday", mon: "Monday", tue: "Tuesday", wed: "Wednesday", thu: "Thursday", fri: "Friday",
-                "d1-title": "Landing & Logistics", "d1-sub": "Pick up car, Grocery shop & Check-in",
+                "d1-title": "Landing & Logistics", "d1-sub": "Pick up car & Check-in",
                 "d1-pre": "Pre-Arrival Note: Christian & Mandy land FRI 24 APR.",
                 "car-pickup": "ALL IN Car Hire pickup after landing.", "grocery": "Supermarket Visit: Stock up for the week.", "checkin": "Villa Check-in: 16:00",
                 "d1-wait-title": "Wasting Time Before Check-in",
                 "d1-w1": "Closest to car hire; huge mall with easy stroller paths.", "d1-w2": "Beautiful flat promenade but high-effort parking.", "d1-w3": "Closer to Nerja; lovely flat promenade, quiet.", "d1-w4": "Get the drive over with; have lunch by the sea.",
                 "d1-verdict": "Verdict: If Aelin is sleeping, drive straight. If awake, Rincón is easiest.",
-                "d2-title": "Rest & Villa Rituals", "d2-sub": "Chill Villa Day & Optional Frigiliana",
+                "d1-tip-title": "Arrival Tip", "d1-tip-desc": "The drive from Malaga airport to Nerja takes about 45-50 minutes straight down the A-7 highway. Make sure to buy large 5L or 8L bottles of water (Agua Mineral) during your grocery run—tap water is safe, but bottled tastes much better for tea and baby formula!",
+                
+                "d2-title": "Rest & Villa Rituals", "d2-sub": "Chill Villa Day",
                 "d2-intro": "First full day to settle in. Focus on a \"zero-alarm\" morning and enjoying the villa amenities.",
                 morning: "Morning", afternoon: "Afternoon", "d2-morning": "Long breakfast on the terrace and first pool session.", "d2-afternoon": "Nap time for Aelin and a relaxed evening at the villa.",
                 "if-bored": "Local Option if bored:", "d2-train": "The Frigiliana Tourist Train is a great way to see the views of the white village without the steep climb, keeping things easy with the stroller.",
+                "d2-tip-title": "About Frigiliana", "d2-tip-desc": "Consistently voted one of the most beautiful villages in Spain. Its Moorish old town is a maze of perfectly preserved, flower-draped streets. Look out for the local sweet wine ('Vino de Frigiliana') and cane honey ('Miel de Caña'), uniquely produced here.",
+                
                 "d3-title": "Córdoba: The Mezquita", "d3-sub": "Road Trip",
                 "d3-desc": "A beautiful 2h 10m drive to one of the most unique buildings in the world. The interior is a forest of arches—cool, quiet, and stroller-friendly.",
                 "must-see": "Must See", "d3-see": "The Orange Tree Courtyard (Patio de los Naranjos) is a perfect shaded spot for Aelin to have a break.",
                 "parking": "Parking", "d3-park": "Lot: Paseo de la Victoria",
-                "d4-title": "Poolside & Local Vibes", "d4-sub": "Chill Villa Day & Nerja Market",
+                "d3-tip-title": "Mezquita History & Food", "d3-tip-desc": "The Great Mosque was started in 784 AD. After the Christian conquest of Córdoba in 1236, it was converted into a Catholic church, culminating in the insertion of a Renaissance cathedral nave right in its center in the 16th century! After visiting, grab a famous extra-thick 'Tortilla de Patatas' at Bar Santos right outside the walls.",
+                
+                "d4-title": "Poolside & Local Vibes", "d4-sub": "Nerja Market",
                 "d4-intro": "Mid-week recharge. Perfect day for a BBQ lunch at the villa.",
                 "d4-opt1": "Nerja Market", "d4-opt1-sub": "Tuesdays, 10am-2pm. Great for local vibe.",
                 "d4-opt2": "Burriana Beach", "d4-opt2-sub": "Afternoon walk; the promenade is wide and flat, perfect for sunset with the stroller.",
+                "d4-tip-title": "Market Finds & Churros", "d4-tip-desc": "At the Tuesday market (located in the Almijara area), look out for vibrant Andalusian ceramics, fresh local olives, and spices. It's a busy, colorful affair. Afterwards, treat yourselves to traditional Spanish Churros con Chocolate at a local café—a perfectly sweet midday energy boost.",
+                
                 "d5-title": "Ronda & Setenil", "d5-sub": "Road Trip",
                 "d5-setenil": "A stunning town built into the cliffs. Stick to the riverbed streets for easier stroller access.",
                 "d5-ronda": "Head to the Alameda del Tajo park for a flat, shaded walk that leads to incredible balconies overlooking the valley and bridge.",
                 "d5-note": "Note: A carrier for Aelin is best for gorge paths.",
-                "d6-title": "Granada: The Alhambra", "d6-sub": "Grand Highlight Road Trip",
+                "d5-tip-title": "Engineering Marvels", "d5-tip-desc": "Ronda's 'Puente Nuevo' (New Bridge) is over 100 meters deep and took 34 years to build, finally completing in 1793. Meanwhile, in Setenil, the unique houses aren't just built *next* to rocks—they utilize natural overhangs as their actual roofs, a design that keeps them naturally cool during the scorching Andalusian summers.",
+
+                "d6-title": "Granada: The Alhambra", "d6-sub": "Grand Highlight",
                 "thu-highlight": "Thu 30 Apr • Grand Highlight", "d6-intro": "The crown jewel of Andalusia. The Nasrid Palaces require a specific time slot—be punctual!",
                 "d6-rule1-title": "Palaces:", "d6-rule1": "Strollers are forbidden inside the palaces; you'll need the carrier.",
                 "d6-rule2-title": "Gardens:", "d6-rule2": "The Generalife gardens are mostly accessible with wheels.",
                 "d6-rule3": "Essential: Do your big grocery shop today! Tomorrow is a holiday.",
+                "d6-tip-title": "The Red Fortress", "d6-tip-desc": "The Alhambra (from Arabic 'Al-Ḥamrāʾ', meaning 'The Red One') was the last Moorish stronghold in Spain, falling to the Catholic Monarchs in 1492. It inspired Washington Irving's famous 'Tales of the Alhambra'. Pay close attention to the intricate, mathematical perfection of the stucco work and the soothing use of water features throughout.",
                 "plan-b": "Plan B (No tickets):", "d6-planb": "Lazy morning at villa. Afternoon in Frigiliana for a rooftop lunch, or visit the Nerja Caves (naturally cool and easy).",
-                "d7-title": "Last Day Relaxation", "d7-sub": "Travel Day", "labor-day": "Labor Day", "labor-warn": "Shops are closed! Use up villa supplies.", "d7-intro": "The entire day is yours to relax by the pool until departure. Squeeze in one last cold beer!",
+                
+                "d7-title": "Last Day Relaxation", "d7-sub": "Travel Day & Labor Day", "labor-day": "Labor Day", "labor-warn": "Shops are closed! Use up villa supplies.", "d7-intro": "The entire day is yours to relax by the pool until departure. Squeeze in one last cold beer!",
                 "departure-timeline": "Departure Timeline", event: "Event", time: "Time", "dep-nerja": "Depart Nerja", "car-ret": "Car Return", "fl-man": "Flight FR7261 (MAN)", "fl-ams": "Flight HV6228 (AMS)",
-                "map-title": "Explore Andalusia", "map-sub": "Tap to navigate to Baby-Friendly Parking", "nav-links": "Navigation Links", "p1": "Parking Balcón de Europa", "p2": "Village Entrance Lot", "p3": "Paseo de la Victoria Lot",
-                "log-title": "Flights", "ams-fl": "Amsterdam Group", "man-fl": "Manchester Group", outbound: "Outbound", return: "Return", "sat-note": "* Lands early morning SAT 2 MAY"
+                "d7-tip-title": "Día del Trabajador", "d7-tip-desc": "May 1st is taken very seriously in Spain. Supermarkets and major attractions will be firmly shut. However, restaurants and beach 'Chiringuitos' often stay open and get busy with local families. If you fancy venturing out, head to Burriana beach for a massive, wood-fire cooked Paella at the famous 'Ayo'.",
+
+                "map-title": "Explore Andalusia", "map-sub": "Tap to navigate", "nav-links": "Navigation Links", 
+                "p-villa": "Nerja Basecamp", "p1": "Parking Balcón de Europa", "p-burriana": "Nerja's Main Beach", "p2": "Village Entrance Lot", "p3": "Paseo de la Victoria Lot", "p-ronda": "Parking Martínez Astein", "p-setenil": "Town Center", "p-alhambra": "The Alhambra Parking",
+                
+                "log-title": "Flights", "log-sub": "Tap to track flight live", "ams-fl": "Amsterdam Group", "man-fl": "Manchester Group", outbound: "Outbound", "outbound-man": "Outbound • Fri 24 Apr", return: "Return", "sat-note": "* Lands early morning SAT 2 MAY",
+                
+                "info-title": "Travel Info", "info-sub": "Nerja, Villa & Baby Tips", 
+                "nerja-guide-title": "Discovering Nerja", "nerja-guide-desc": "Unlike much of the Costa del Sol, Nerja has escaped the high-rise concrete hotels. It retains a traditional charm with its whitewashed houses and narrow streets.", "n-tip1": "<strong>Balcón de Europa:</strong> A magnificent promenade built on the edge of a cliff, offering panoramic views of the Mediterranean. Great for evening strolls.", "n-tip2": "<strong>Tapas Culture:</strong> In many traditional Nerja bars, you still get a free 'tapa' (small snack) with every drink you order.",
+                "culture-tips-title": "Spanish Culture & Dining", "c-tip1": "<strong>The Siesta:</strong> It's real! Many small shops and businesses close between 14:00 and 17:00. Plan shopping accordingly.", "c-tip2": "<strong>Dining Times:</strong> Spaniards eat late. Lunch is the main meal (around 14:00). Dinner rarely starts before 20:30 or 21:00.", "c-tip3": "<strong>Tipping:</strong> A 10% tip is appreciated for good service in sit-down restaurants, but not strictly mandatory. For cafes/bars, just leave the small change.",
+                "villa-desc": "A beautiful Solmar Villa offering a private pool, stunning views, and plenty of space for the family. Located conveniently in Nerja, providing easy access to local beaches and the town center.", "view-map-btn": "View on Map",
+                "baby-tips-title": "First Time Baby Tips", "bt1": "Bring a baby carrier! Strollers are great for promenades, but useless in the Alhambra palaces or steep Frigiliana streets.", "bt2": "Spanish supermarkets (Mercadona, Supersol) have excellent baby aisles for nappies and formula.", "bt3": "Dining out is very baby-friendly in Spain; locals love kids and restaurants usually accommodate high chairs.",
+                "travel-tips-title": "Local Travel Info", "tt1": "Always carry some cash (Euros) for small parking lots or rural cafes.", "tt2": "Toll roads (AP-7) accept card payments and are usually much faster and quieter than coastal roads.",
+                "health-title": "Health & Emergencies", "h-tip1": "<strong>Emergency:</strong> Dial 112 for all emergencies (operators speak English).", "h-tip2": "<strong>Pharmacies:</strong> Look for the glowing green cross ('Farmacia'). They are highly trained and can advise on minor ailments for the baby. There is always an 'on-duty' 24hr pharmacy listed on the door of closed ones."
             },
             nl: {
                 dates: "25 Apr — 01 Mei • Familievakantie", back: "Terug", schedule: "De Planning", subtitle: "Tik op een dag voor details.",
                 sat: "Zaterdag", sun: "Zondag", mon: "Maandag", tue: "Dinsdag", wed: "Woensdag", thu: "Donderdag", fri: "Vrijdag",
-                "d1-title": "Landing & Logistiek", "d1-sub": "Auto ophalen, Boodschappen & Check-in",
+                "d1-title": "Landing & Logistiek", "d1-sub": "Auto ophalen & Check-in",
                 "d1-pre": "Pre-Aankomst: Christian & Mandy landen op VRIJ 24 APR.",
                 "car-pickup": "ALL IN Car Hire ophalen na landing.", "grocery": "Supermarkt Bezoek: Voorraad voor de week inslaan.", "checkin": "Villa Check-in: 16:00",
                 "d1-wait-title": "Tijd doden voor Check-in",
                 "d1-w1": "Dichtbij autoverhuur; groot winkelcentrum met makkelijke wandelpaden.", "d1-w2": "Mooie vlakke boulevard, maar lastig parkeren.", "d1-w3": "Dichterbij Nerja; heerlijk vlakke boulevard, rustig.", "d1-w4": "Rijd direct door; lekker lunchen aan zee.",
                 "d1-verdict": "Verdict: Als Aelin slaapt, rijd door. Als ze wakker is, is Rincón het makkelijkst.",
-                "d2-title": "Rust & Villa Rituelen", "d2-sub": "Lekker bij de Villa & Optioneel Frigiliana",
+                "d1-tip-title": "Aankomst Tip", "d1-tip-desc": "De rit van vliegveld Malaga naar Nerja duurt ongeveer 45-50 minuten over de A-7. Zorg ervoor dat je grote 5L of 8L flessen water (Agua Mineral) koopt tijdens de boodschappen—kraanwater is veilig, maar mineraalwater smaakt veel beter voor thee en flesvoeding!",
+                
+                "d2-title": "Rust & Villa Rituelen", "d2-sub": "Lekker bij de Villa",
                 "d2-intro": "Eerste volle dag om te settelen. Focus op uitslapen en genieten van de villa.",
                 morning: "Ochtend", afternoon: "Middag", "d2-morning": "Lang ontbijt op het terras en eerste duik in het zwembad.", "d2-afternoon": "Slaapje voor Aelin en een ontspannen avond bij de villa.",
                 "if-bored": "Lokale Optie bij verveling:", "d2-train": "Het toeristentreintje van Frigiliana is perfect om het dorp te zien zonder steile klim, ideaal met de kinderwagen.",
+                "d2-tip-title": "Over Frigiliana", "d2-tip-desc": "Vaak verkozen tot een van de mooiste dorpen van Spanje. Het oude Moorse stadje is een doolhof van perfect bewaarde, met bloemen versierde straatjes. Let op de lokale zoete wijn ('Vino de Frigiliana') en rietsuikerhoning ('Miel de Caña'), die hier uniek geproduceerd worden.",
+                
                 "d3-title": "Córdoba: De Mezquita", "d3-sub": "Roadtrip",
                 "d3-desc": "Een mooie rit van 2u 10m naar een van de meest unieke gebouwen ter wereld. Het interieur is koel en buggy-vriendelijk.",
                 "must-see": "Must See", "d3-see": "De Patio de los Naranjos is een perfecte schaduwrijke plek voor een pauze met Aelin.",
                 "parking": "Parkeren", "d3-park": "P-Plaats: Paseo de la Victoria",
-                "d4-title": "Poolside & Lokaal", "d4-sub": "Villa Dag & Markt van Nerja",
+                "d3-tip-title": "Mezquita Geschiedenis & Eten", "d3-tip-desc": "De Grote Moskee werd gestart in 784 na Christus. Na de christelijke verovering van Córdoba in 1236 werd het een katholieke kerk, met als hoogtepunt de bouw van een kathedraal precies in het midden in de 16e eeuw! Haal na het bezoek een dikke 'Tortilla de Patatas' bij Bar Santos, net buiten de muren.",
+                
+                "d4-title": "Poolside & Lokaal", "d4-sub": "Markt van Nerja",
                 "d4-intro": "Midden in de week even opladen. Perfecte dag voor een BBQ lunch.",
                 "d4-opt1": "Nerja Markt", "d4-opt1-sub": "Dinsdag, 10:00-14:00. Erg leuk en lokaal.",
                 "d4-opt2": "Burriana Strand", "d4-opt2-sub": "Middagwandeling; de boulevard is breed en vlak, perfect voor zonsondergang met de wagen.",
+                "d4-tip-title": "Markt Vondsten & Churros", "d4-tip-desc": "Op de dinsdagmarkt (in de wijk Almijara) vind je kleurrijk Andalusisch keramiek, verse lokale olijven en kruiden. Het is een drukke, kleurrijke bedoening. Trakteer jezelf daarna op traditionele Spaanse Churros met dikke chocolademelk bij een lokaal café—een heerlijke oppepper.",
+                
                 "d5-title": "Ronda & Setenil", "d5-sub": "Roadtrip",
                 "d5-setenil": "Een prachtig stadje gebouwd in de rotsen. Houd de straten langs de rivierbedding aan voor kinderwagens.",
                 "d5-ronda": "Ga naar het Alameda del Tajo park voor een vlakke wandeling met uitzicht op de beroemde brug.",
                 "d5-note": "Let op: Een draagzak voor Aelin is het best voor de kloofpaden.",
-                "d6-title": "Granada: Het Alhambra", "d6-sub": "Hoogtepunt Roadtrip",
+                "d5-tip-title": "Bouwkundige Wonderen", "d5-tip-desc": "De 'Puente Nuevo' (Nieuwe Brug) van Ronda is meer dan 100 meter diep en het duurde 34 jaar om hem te bouwen (klaar in 1793). In Setenil zijn de unieke huizen niet alleen *naast* rotsen gebouwd—ze gebruiken de natuurlijke rotsuitsteeksels als dak, wat de huizen natuurlijk koel houdt in de zomer.",
+
+                "d6-title": "Granada: Het Alhambra", "d6-sub": "Hoogtepunt",
                 "thu-highlight": "Do 30 Apr • Hoogtepunt", "d6-intro": "Het kroonjuweel van Andalusië. De Nasrid-paleizen vereisen een tijdslot—wees op tijd!",
                 "d6-rule1-title": "Paleizen:", "d6-rule1": "Kinderwagens zijn verboden in de paleizen; je hebt de draagzak nodig.",
                 "d6-rule2-title": "Tuinen:", "d6-rule2": "De Generalife tuinen zijn grotendeels toegankelijk met wielen.",
                 "d6-rule3": "Belangrijk: Doe vandaag de grote boodschappen! Morgen is alles dicht.",
+                "d6-tip-title": "Het Rode Fort", "d6-tip-desc": "Het Alhambra (van het Arabische 'Al-Ḥamrāʾ', de rode) was het laatste Moorse bolwerk in Spanje, gevallen in 1492. Het inspireerde de beroemde 'Tales of the Alhambra' van Washington Irving. Let op de wiskundige perfectie van het stucwerk en het rustgevende gebruik van water.",
                 "plan-b": "Plan B (Geen tickets):", "d6-planb": "Luie ochtend bij villa. Middag naar Frigiliana voor lunch, of de grotten van Nerja.",
+                
                 "d7-title": "Laatste Dag Ontspanning", "d7-sub": "Reisdag", "labor-day": "Dag van de Arbeid", "labor-warn": "Winkels zijn gesloten! Maak de villa-voorraad op.", "d7-intro": "De hele dag is van jullie bij het zwembad. Geniet nog van een laatste koud biertje!",
                 "departure-timeline": "Vertrekschema", event: "Gebeurtenis", time: "Tijd", "dep-nerja": "Vertrek Nerja", "car-ret": "Auto Inleveren", "fl-man": "Vlucht FR7261 (MAN)", "fl-ams": "Vlucht HV6228 (AMS)",
-                "map-title": "Ontdek Andalusië", "map-sub": "Tik voor navigatie naar parkeerplaatsen", "nav-links": "Snelkoppelingen", "p1": "Parking Balcón de Europa", "p2": "Village Entrance Lot", "p3": "Paseo de la Victoria Lot",
-                "log-title": "Vluchten", "ams-fl": "Amsterdam Groep", "man-fl": "Manchester Groep", outbound: "Heenreis", return: "Terugreis", "sat-note": "* Landt vroege ochtend ZA 2 MEI"
+                "d7-tip-title": "Día del Trabajador", "d7-tip-desc": "1 Mei wordt in Spanje erg serieus genomen. Supermarkten en grote attracties zijn gesloten. Maar, restaurants en strandtentjes ('Chiringuitos') blijven vaak open en zitten vol lokale families. Ga naar het Burriana strand voor een massale paella van het houtvuur bij de beroemde 'Ayo'.",
+
+                "map-title": "Ontdek Andalusië", "map-sub": "Tik om te navigeren", "nav-links": "Snelkoppelingen", 
+                "p-villa": "Nerja Basis", "p1": "Parking Balcón de Europa", "p-burriana": "Hoofdstrand Nerja", "p2": "Village Entrance Lot", "p3": "Paseo de la Victoria Lot", "p-ronda": "Parking Martínez Astein", "p-setenil": "Centrum", "p-alhambra": "The Alhambra Parking",
+                
+                "log-title": "Vluchten", "log-sub": "Tik om vlucht live te volgen", "ams-fl": "Amsterdam Groep", "man-fl": "Manchester Groep", outbound: "Heenreis", "outbound-man": "Heenreis • Vri 24 Apr", return: "Terugreis", "sat-note": "* Landt vroege ochtend ZA 2 MEI",
+                
+                "info-title": "Reisinfo", "info-sub": "Nerja, Villa & Baby Tips", 
+                "nerja-guide-title": "Ontdek Nerja", "nerja-guide-desc": "In tegenstelling tot veel van de Costa del Sol, is Nerja ontsnapt aan de hoogbouw hotels. Het behoudt een traditionele charme met witgekalkte huizen en smalle straatjes.", "n-tip1": "<strong>Balcón de Europa:</strong> Een prachtige boulevard gebouwd op de rand van een klif, met uitzicht op zee. Geweldig voor avondwandelingen.", "n-tip2": "<strong>Tapas Cultuur:</strong> In veel traditionele bars in Nerja krijg je nog steeds een gratis 'tapa' (hapje) bij elk drankje dat je bestelt.",
+                "culture-tips-title": "Spaanse Cultuur & Eten", "c-tip1": "<strong>De Siësta:</strong> Het is echt! Veel kleine winkels sluiten tussen 14:00 en 17:00. Plan je boodschappen goed in.", "c-tip2": "<strong>Eettijden:</strong> Spanjaarden eten laat. De lunch is warm (rond 14:00). Het diner begint zelden voor 20:30 of 21:00.", "c-tip3": "<strong>Fooien:</strong> 10% fooi wordt gewaardeerd in restaurants, maar is niet verplicht. Laat in cafés het wisselgeld liggen.",
+                "villa-desc": "Een prachtige Solmar Villa met privézwembad, fantastisch uitzicht en volop ruimte voor de familie. Gunstig gelegen in Nerja, met gemakkelijke toegang tot lokale stranden en het centrum.", "view-map-btn": "Bekijk op Kaart",
+                "baby-tips-title": "Eerste Keer Baby Tips", "bt1": "Neem een draagzak mee! Buggy's zijn geweldig voor boulevards, maar nutteloos in het Alhambra of steile straten in Frigiliana.", "bt2": "Spaanse supermarkten (Mercadona, Supersol) hebben uitstekende baby-paden voor luiers en voeding.", "bt3": "Uit eten gaan is heel babyvriendelijk in Spanje; de lokale bevolking houdt van kinderen en er zijn meestal kinderstoelen beschikbaar.",
+                "travel-tips-title": "Lokale Reisinfo", "tt1": "Zorg dat je altijd wat contant geld (Euro's) bij je hebt voor kleine parkeerplaatsen of landelijke cafés.", "tt2": "Tolwegen (AP-7) accepteren pinpassen en zijn meestal veel sneller en rustiger dan kustwegen.",
+                "health-title": "Gezondheid & Noodgevallen", "h-tip1": "<strong>Noodgevallen:</strong> Bel 112 voor alle noodgevallen (Engels gesproken).", "h-tip2": "<strong>Apotheken:</strong> Zoek naar het groene kruis ('Farmacia'). Ze zijn hoog opgeleid. Er is altijd een 24-uurs apotheek, te vinden op een lijst op de deur van gesloten apotheken."
             }
         };
 
@@ -685,48 +862,24 @@
 
         function toggleLanguage() {
             currentLang = currentLang === 'en' ? 'nl' : 'en';
+            document.getElementById('lang-btn').innerText = currentLang === 'en' ? 'NL' : 'EN';
             
-            const bg = document.getElementById('lang-bg');
-            const btnEn = document.getElementById('btn-en');
-            const btnNl = document.getElementById('btn-nl');
-            
-            if(currentLang === 'nl') {
-                bg.style.transform = 'translateX(37px)';
-                btnNl.classList.add('active-text');
-                btnEn.classList.remove('active-text');
-            } else {
-                bg.style.transform = 'translateX(0px)';
-                btnEn.classList.add('active-text');
-                btnNl.classList.remove('active-text');
-            }
-
             document.querySelectorAll('[data-i18n]').forEach(el => {
                 const key = el.getAttribute('data-i18n');
                 if (translations[currentLang][key]) {
-                    el.textContent = translations[currentLang][key];
+                    el.innerHTML = translations[currentLang][key];
                 }
             });
         }
 
         function showView(viewId) {
-            document.querySelectorAll('.page-view').forEach(view => view.classList.remove('active'));
-            const target = document.getElementById('view-' + viewId);
-            if(target) target.classList.add('active');
-
-            const backBtn = document.getElementById('back-btn');
-            const headerInfo = document.getElementById('header-main-info');
-            
-            if (viewId === 'main') {
-                backBtn.classList.add('hidden');
-                headerInfo.classList.remove('hidden');
-            } else {
-                backBtn.classList.remove('hidden');
-                headerInfo.classList.add('hidden');
-            }
+            document.querySelectorAll('.page-view').forEach(el => {
+                el.classList.remove('active');
+            });
+            document.getElementById('view-' + viewId).classList.add('active');
 
             document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
-            let navId = (viewId.startsWith('day') && viewId !== 'day2') ? 'main' : 
-                        (viewId === 'day2' ? 'info' : viewId);
+            let navId = viewId.startsWith('day') ? 'main' : viewId;
             
             const activeNav = document.getElementById('nav-' + navId);
             if (activeNav) activeNav.classList.add('active');
