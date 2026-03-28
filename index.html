@@ -1,5 +1,90 @@
 <!DOCTYPE html>
 <html lang="en">
+  <script>
+function updateMap(location) {
+    const map = document.getElementById("map-frame");
+    const container = document.getElementById("map-container");
+
+    if (!map || !container) return;
+
+    // Update the map iframe
+    const encoded = encodeURIComponent(location);
+    map.src = `https://maps.google.com/maps?q=${encoded}&z=14&output=embed`;
+
+    // ✅ Smooth scroll with offset so header doesn't cover the map
+    const yOffset = -120; // adjust this if your header height changes
+    const y = container.getBoundingClientRect().top + window.pageYOffset + yOffset;
+
+    window.scrollTo({
+        top: y,
+        behavior: "smooth"
+    });
+}
+</script>
+    <script>
+document.addEventListener("DOMContentLoaded", () => {
+
+    // COUNTDOWN
+    function updateCountdown() {
+        const el = document.getElementById("countdown");
+        if (!el) return;
+
+        const target = new Date("2026-04-25T05:25:00");
+        const now = new Date();
+        const diff = target - now;
+
+        if (diff <= 0) {
+            el.innerText = "✈️ It's time!";
+            return;
+        }
+
+        const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+        const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
+        const mins = Math.floor((diff / (1000 * 60)) % 60);
+        const secs = Math.floor((diff / 1000) % 60);
+
+        el.innerText = `${days}d ${hours}h ${mins}m ${secs}s`;
+    }
+
+    // WEATHER
+    async function getWeather() {
+        try {
+            const res = await fetch("https://api.open-meteo.com/v1/forecast?latitude=36.75&longitude=-3.87&current_weather=true");
+            const data = await res.json();
+
+            const tempEl = document.getElementById("weather-temp");
+            const iconEl = document.getElementById("weather-icon");
+
+            if (!tempEl || !iconEl) return;
+
+            const temp = Math.round(data.current_weather.temperature);
+            const code = data.current_weather.weathercode;
+
+            tempEl.innerText = temp + "°C";
+
+            let icon = "fa-sun";
+            if ([1,2,3].includes(code)) icon = "fa-cloud-sun";
+            else if ([45,48].includes(code)) icon = "fa-smog";
+            else if ([51,53,55,61,63,65].includes(code)) icon = "fa-cloud-rain";
+            else if ([71,73,75].includes(code)) icon = "fa-snowflake";
+            else if ([95,96,99].includes(code)) icon = "fa-bolt";
+
+            iconEl.className = `fas ${icon} text-lg`;
+
+        } catch {
+            const tempEl = document.getElementById("weather-temp");
+            if (tempEl) tempEl.innerText = "--";
+        }
+    }
+
+    updateCountdown();
+    getWeather();
+
+    setInterval(updateCountdown, 1000);
+    setInterval(getWeather, 600000);
+
+});
+</script>
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
@@ -88,18 +173,49 @@
 </head>
 <body class="safe-pb">
 
-    <!-- Top Bar -->
-    <div class="fixed top-0 w-full z-50 bg-white/90 backdrop-blur-md border-b border-slate-100 p-4 flex justify-between items-center shadow-sm">
-        <div>
-            <h1 class="font-black text-xl gradient-text">Nerja 2026</h1>
-            <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest" data-i18n="dates">25 Apr — 01 May • Family Trip</p>
+    <!-- Top Bar (not fixed anymore) -->
+    <div class="w-full bg-white/90 backdrop-blur-md border-b border-slate-100 p-4 shadow-sm space-y-3">
+        
+        <!-- Title and Dates -->
+        <div class="flex justify-between items-center">
+            <div>
+                <h1 class="font-black text-xl gradient-text">Nerja 2026</h1>
+                <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest" data-i18n="dates">
+                    25 Apr — 01 May • Family Trip
+                </p>
+            </div>
+            <button onclick="toggleLanguage()" id="lang-btn" class="bg-slate-100 hover:bg-slate-200 text-slate-700 font-black text-xs py-2 px-4 rounded-full transition-colors">
+                NL
+            </button>
         </div>
-        <button onclick="toggleLanguage()" id="lang-btn" class="bg-slate-100 hover:bg-slate-200 text-slate-700 font-black text-xs py-2 px-4 rounded-full transition-colors">
-            NL
-        </button>
+
+        <!-- ✈️ Holiday Countdown + Weather -->
+        <div class="bg-gradient-to-r from-blue-500 to-purple-500 text-white py-2 px-4 rounded-xl shadow">
+            <div class="flex justify-between items-center">
+
+                <!-- Countdown -->
+                <div class="text-left">
+                    <p class="text-[10px] font-bold uppercase tracking-widest opacity-80">
+                        Holiday Countdown
+                    </p>
+                    <p id="countdown" class="text-sm font-black">
+                        Loading...
+                    </p>
+                </div>
+
+                <!-- Weather -->
+                <div class="text-right flex items-center gap-2">
+                    <i id="weather-icon" class="fas fa-sun text-lg"></i>
+                    <span id="weather-temp" class="text-sm font-black">--°C</span>
+                </div>
+
+            </div>
+        </div>
     </div>
 
-    <div class="h-20"></div> <!-- Spacer -->
+    <!-- Optional spacer to separate header from content -->
+    <div class="h-4"></div>
+
 
     <!-- MAIN MENU (DAYS) -->
     <div id="view-main" class="page-view active max-w-md mx-auto p-5 space-y-4">
@@ -562,98 +678,139 @@
             </div>
         </div>
     </div>
+<!-- MAP VIEW -->
+<div id="view-map" class="page-view max-w-md mx-auto p-5 space-y-6">
+    <header>
+        <h2 class="text-3xl font-black text-slate-800" data-i18n="map-title">Explore Andalusia</h2>
+        <p class="text-xs font-bold text-blue-600 uppercase tracking-widest mt-1" data-i18n="map-sub">Tap to navigate</p>
+    </header>
 
-    <!-- MAP VIEW -->
-    <div id="view-map" class="page-view max-w-md mx-auto p-5 space-y-6">
-        <header>
-            <h2 class="text-3xl font-black text-slate-800" data-i18n="map-title">Explore Andalusia</h2>
-            <p class="text-xs font-bold text-blue-600 uppercase tracking-widest mt-1" data-i18n="map-sub">Tap to navigate</p>
-        </header>
-        
-        <div class="h-64 rounded-[3rem] overflow-hidden shadow-xl border border-slate-200">
-            <iframe 
-                src="https://maps.google.com/maps?q=Villa%20Felix%20Dos,%20Nerja,%20Spain&t=&z=14&ie=UTF8&iwloc=&output=embed" 
-                style="border:0; width: 100%; height: 100%;" 
-                allowfullscreen="" loading="lazy">
-            </iframe>
-        </div>
-
-        <div class="space-y-3">
-            <h3 class="text-[10px] font-black uppercase tracking-widest text-slate-400 px-4" data-i18n="nav-links">Navigation Links</h3>
-            
-            <div onclick="window.open('https://maps.google.com/?daddr=Villa+Felix+Dos,+Nerja', '_blank')" class="day-card bg-white p-5 rounded-3xl flex items-center gap-4 cursor-pointer">
-                <div class="w-10 h-10 rounded-full bg-blue-50 flex items-center justify-center text-blue-600"><i class="fas fa-home"></i></div>
-                <div class="flex-1">
-                    <h4 class="font-bold text-slate-800 text-sm">Villa Felix Dos</h4>
-                    <p class="text-[10px] text-slate-400 font-bold uppercase" data-i18n="p-villa">Nerja Basecamp</p>
-                </div>
-                <i class="fas fa-external-link-alt text-slate-300 text-[10px]"></i>
-            </div>
-
-            <div onclick="window.open('https://maps.google.com/?daddr=Parking+Balcon+de+Europa,Nerja', '_blank')" class="day-card bg-white p-5 rounded-3xl flex items-center gap-4 cursor-pointer">
-                <div class="w-10 h-10 rounded-full bg-blue-50 flex items-center justify-center text-blue-600"><i class="fas fa-parking"></i></div>
-                <div class="flex-1">
-                    <h4 class="font-bold text-slate-800 text-sm">Nerja Center</h4>
-                    <p class="text-[10px] text-slate-400 font-bold uppercase" data-i18n="p1">Parking Balcón de Europa</p>
-                </div>
-                <i class="fas fa-external-link-alt text-slate-300 text-[10px]"></i>
-            </div>
-            
-            <div onclick="window.open('https://maps.google.com/?daddr=Burriana+Beach,Nerja', '_blank')" class="day-card bg-white p-5 rounded-3xl flex items-center gap-4 cursor-pointer">
-                <div class="w-10 h-10 rounded-full bg-blue-50 flex items-center justify-center text-blue-600"><i class="fas fa-umbrella-beach"></i></div>
-                <div class="flex-1">
-                    <h4 class="font-bold text-slate-800 text-sm">Burriana Beach</h4>
-                    <p class="text-[10px] text-slate-400 font-bold uppercase" data-i18n="p-burriana">Nerja's Main Beach</p>
-                </div>
-                <i class="fas fa-external-link-alt text-slate-300 text-[10px]"></i>
-            </div>
-
-            <div onclick="window.open('https://maps.google.com/?daddr=Parking+Frigiliana', '_blank')" class="day-card bg-white p-5 rounded-3xl flex items-center gap-4 cursor-pointer">
-                <div class="w-10 h-10 rounded-full bg-emerald-50 flex items-center justify-center text-emerald-600"><i class="fas fa-parking"></i></div>
-                <div class="flex-1">
-                    <h4 class="font-bold text-slate-800 text-sm">Frigiliana Village</h4>
-                    <p class="text-[10px] text-slate-400 font-bold uppercase" data-i18n="p2">Village Entrance Lot</p>
-                </div>
-                <i class="fas fa-external-link-alt text-slate-300 text-[10px]"></i>
-            </div>
-            
-            <div onclick="window.open('https://maps.google.com/?daddr=Parking+Paseo+de+la+Victoria,Cordoba', '_blank')" class="day-card bg-white p-5 rounded-3xl flex items-center gap-4 cursor-pointer">
-                <div class="w-10 h-10 rounded-full bg-orange-50 flex items-center justify-center text-orange-600"><i class="fas fa-parking"></i></div>
-                <div class="flex-1">
-                    <h4 class="font-bold text-slate-800 text-sm">Córdoba</h4>
-                    <p class="text-[10px] text-slate-400 font-bold uppercase" data-i18n="p3">Paseo de la Victoria Lot</p>
-                </div>
-                <i class="fas fa-external-link-alt text-slate-300 text-[10px]"></i>
-            </div>
-
-            <div onclick="window.open('https://maps.google.com/?daddr=Parking+Martinez+Astein,Ronda', '_blank')" class="day-card bg-white p-5 rounded-3xl flex items-center gap-4 cursor-pointer">
-                <div class="w-10 h-10 rounded-full bg-purple-50 flex items-center justify-center text-purple-600"><i class="fas fa-parking"></i></div>
-                <div class="flex-1">
-                    <h4 class="font-bold text-slate-800 text-sm">Ronda</h4>
-                    <p class="text-[10px] text-slate-400 font-bold uppercase" data-i18n="p-ronda">Parking Martínez Astein</p>
-                </div>
-                <i class="fas fa-external-link-alt text-slate-300 text-[10px]"></i>
-            </div>
-
-            <div onclick="window.open('https://maps.google.com/?daddr=Setenil+de+las+Bodegas', '_blank')" class="day-card bg-white p-5 rounded-3xl flex items-center gap-4 cursor-pointer">
-                <div class="w-10 h-10 rounded-full bg-amber-50 flex items-center justify-center text-amber-600"><i class="fas fa-map-pin"></i></div>
-                <div class="flex-1">
-                    <h4 class="font-bold text-slate-800 text-sm">Setenil de las Bodegas</h4>
-                    <p class="text-[10px] text-slate-400 font-bold uppercase" data-i18n="p-setenil">Town Center</p>
-                </div>
-                <i class="fas fa-external-link-alt text-slate-300 text-[10px]"></i>
-            </div>
-
-            <div onclick="window.open('https://maps.google.com/?daddr=The+Alhambra,Granada', '_blank')" class="day-card bg-white p-5 rounded-3xl flex items-center gap-4 cursor-pointer">
-                <div class="w-10 h-10 rounded-full bg-red-50 flex items-center justify-center text-red-600"><i class="fas fa-monument"></i></div>
-                <div class="flex-1">
-                    <h4 class="font-bold text-slate-800 text-sm">Granada</h4>
-                    <p class="text-[10px] text-slate-400 font-bold uppercase" data-i18n="p-alhambra">The Alhambra Parking</p>
-                </div>
-                <i class="fas fa-external-link-alt text-slate-300 text-[10px]"></i>
-            </div>
-        </div>
+    <!-- Embedded Map -->
+<div id="map-container" class="h-64 rounded-[3rem] overflow-hidden shadow-xl border border-slate-200">        <iframe 
+            id="map-frame"
+            src="https://maps.google.com/maps?q=Villa%20Felix%20Dos,%20Nerja,%20Spain&z=14&output=embed" 
+            style="border:0; width: 100%; height: 100%;" 
+            allowfullscreen="" loading="lazy">
+        </iframe>
     </div>
+
+    <div class="space-y-3">
+        <h3 class="text-[10px] font-black uppercase tracking-widest text-slate-400 px-4" data-i18n="nav-links">Navigation Links</h3>
+
+        <!-- Villa Felix Dos -->
+        <div class="day-card bg-white p-5 rounded-3xl flex items-center gap-4 cursor-pointer"
+             onclick="updateMap('Villa Felix Dos, Nerja, Spain')">
+            <div class="w-10 h-10 rounded-full bg-blue-50 flex items-center justify-center text-blue-600"><i class="fas fa-home"></i></div>
+            <div class="flex-1">
+                <h4 class="font-bold text-slate-800 text-sm">Villa Felix Dos</h4>
+                <p class="text-[10px] text-slate-400 font-bold uppercase" data-i18n="p-villa">Nerja Basecamp</p>
+            </div>
+            <button onclick="event.stopPropagation(); window.open('https://maps.google.com/?daddr=Villa+Felix+Dos,+Nerja', '_blank')"
+                    class="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center text-blue-600">
+                <i class="fas fa-parking"></i>
+            </button>
+        </div>
+
+        <!-- Nerja Center -->
+        <div class="day-card bg-white p-5 rounded-3xl flex items-center gap-4 cursor-pointer"
+             onclick="updateMap('Parking Balcon de Europa, Nerja')">
+            <div class="w-10 h-10 rounded-full bg-blue-50 flex items-center justify-center text-blue-600"><i class="fas fa-parking"></i></div>
+            <div class="flex-1">
+                <h4 class="font-bold text-slate-800 text-sm">Nerja Center</h4>
+                <p class="text-[10px] text-slate-400 font-bold uppercase" data-i18n="p1">Parking Balcón de Europa</p>
+            </div>
+            <button onclick="event.stopPropagation(); window.open('https://maps.google.com/?daddr=Parking+Balcon+de+Europa,Nerja', '_blank')"
+                    class="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center text-blue-600">
+                <i class="fas fa-parking"></i>
+            </button>
+        </div>
+
+        <!-- Burriana Beach -->
+        <div class="day-card bg-white p-5 rounded-3xl flex items-center gap-4 cursor-pointer"
+             onclick="updateMap('Burriana Beach, Nerja')">
+            <div class="w-10 h-10 rounded-full bg-blue-50 flex items-center justify-center text-blue-600"><i class="fas fa-umbrella-beach"></i></div>
+            <div class="flex-1">
+                <h4 class="font-bold text-slate-800 text-sm">Burriana Beach</h4>
+                <p class="text-[10px] text-slate-400 font-bold uppercase" data-i18n="p-burriana">Nerja's Main Beach</p>
+            </div>
+            <button onclick="event.stopPropagation(); window.open('https://maps.google.com/?daddr=Burriana+Beach,Nerja', '_blank')"
+                    class="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center text-blue-600">
+                <i class="fas fa-parking"></i>
+            </button>
+        </div>
+
+        <!-- Frigiliana Village -->
+        <div class="day-card bg-white p-5 rounded-3xl flex items-center gap-4 cursor-pointer"
+             onclick="updateMap('Frigiliana Village')">
+            <div class="w-10 h-10 rounded-full bg-emerald-50 flex items-center justify-center text-emerald-600"><i class="fas fa-parking"></i></div>
+            <div class="flex-1">
+                <h4 class="font-bold text-slate-800 text-sm">Frigiliana Village</h4>
+                <p class="text-[10px] text-slate-400 font-bold uppercase" data-i18n="p2">Village Entrance Lot</p>
+            </div>
+            <button onclick="event.stopPropagation(); window.open('https://maps.google.com/?daddr=Parking+Frigiliana', '_blank')"
+                    class="w-8 h-8 rounded-full bg-emerald-100 flex items-center justify-center text-emerald-600">
+                <i class="fas fa-parking"></i>
+            </button>
+        </div>
+
+        <!-- Córdoba -->
+        <div class="day-card bg-white p-5 rounded-3xl flex items-center gap-4 cursor-pointer"
+             onclick="updateMap('Parking Paseo de la Victoria, Cordoba')">
+            <div class="w-10 h-10 rounded-full bg-orange-50 flex items-center justify-center text-orange-600"><i class="fas fa-parking"></i></div>
+            <div class="flex-1">
+                <h4 class="font-bold text-slate-800 text-sm">Córdoba</h4>
+                <p class="text-[10px] text-slate-400 font-bold uppercase" data-i18n="p3">Paseo de la Victoria Lot</p>
+            </div>
+            <button onclick="event.stopPropagation(); window.open('https://maps.google.com/?daddr=Parking+Paseo+de+la+Victoria,Cordoba', '_blank')"
+                    class="w-8 h-8 rounded-full bg-orange-100 flex items-center justify-center text-orange-600">
+                <i class="fas fa-parking"></i>
+            </button>
+        </div>
+
+        <!-- Ronda -->
+        <div class="day-card bg-white p-5 rounded-3xl flex items-center gap-4 cursor-pointer"
+             onclick="updateMap('Parking Martinez Astein, Ronda')">
+            <div class="w-10 h-10 rounded-full bg-purple-50 flex items-center justify-center text-purple-600"><i class="fas fa-parking"></i></div>
+            <div class="flex-1">
+                <h4 class="font-bold text-slate-800 text-sm">Ronda</h4>
+                <p class="text-[10px] text-slate-400 font-bold uppercase" data-i18n="p-ronda">Parking Martínez Astein</p>
+            </div>
+            <button onclick="event.stopPropagation(); window.open('https://maps.google.com/?daddr=Parking+Martinez+Astein,Ronda', '_blank')"
+                    class="w-8 h-8 rounded-full bg-purple-100 flex items-center justify-center text-purple-600">
+                <i class="fas fa-parking"></i>
+            </button>
+        </div>
+
+        <!-- Setenil de las Bodegas -->
+        <div class="day-card bg-white p-5 rounded-3xl flex items-center gap-4 cursor-pointer"
+             onclick="updateMap('Setenil de las Bodegas')">
+            <div class="w-10 h-10 rounded-full bg-amber-50 flex items-center justify-center text-amber-600"><i class="fas fa-map-pin"></i></div>
+            <div class="flex-1">
+                <h4 class="font-bold text-slate-800 text-sm">Setenil de las Bodegas</h4>
+                <p class="text-[10px] text-slate-400 font-bold uppercase" data-i18n="p-setenil">Town Center</p>
+            </div>
+            <button onclick="event.stopPropagation(); window.open('https://maps.google.com/?daddr=Setenil+de+las+Bodegas', '_blank')"
+                    class="w-8 h-8 rounded-full bg-amber-100 flex items-center justify-center text-amber-600">
+                <i class="fas fa-parking"></i>
+            </button>
+        </div>
+
+        <!-- Granada -->
+        <div class="day-card bg-white p-5 rounded-3xl flex items-center gap-4 cursor-pointer"
+             onclick="updateMap('The Alhambra, Granada')">
+            <div class="w-10 h-10 rounded-full bg-red-50 flex items-center justify-center text-red-600"><i class="fas fa-monument"></i></div>
+            <div class="flex-1">
+                <h4 class="font-bold text-slate-800 text-sm">Granada</h4>
+                <p class="text-[10px] text-slate-400 font-bold uppercase" data-i18n="p-alhambra">The Alhambra Parking</p>
+            </div>
+            <button onclick="event.stopPropagation(); window.open('https://maps.google.com/?daddr=The+Alhambra,Granada', '_blank')"
+                    class="w-8 h-8 rounded-full bg-red-100 flex items-center justify-center text-red-600">
+                <i class="fas fa-parking"></i>
+            </button>
+        </div>
+
+    </div>
+</div>
 
     <!-- LOGISTICS VIEW -->
     <div id="view-logistics" class="page-view max-w-md mx-auto p-5 space-y-8">
