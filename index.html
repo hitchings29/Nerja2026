@@ -1,9 +1,51 @@
 <!DOCTYPE html>
 <html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Nerja 2026: Ultra Family Guide</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<style>
+body { 
+    font-family: 'Plus Jakarta Sans', sans-serif; 
+    background-color: #f8fafc; 
+    color: #0f172a; 
+    -webkit-tap-highlight-color: transparent; 
+    overflow-x: hidden;
+    letter-spacing: -0.01em;
+}
+.gradient-text{
+    background: linear-gradient(135deg,#2563eb,#8b5cf6);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+/* Splash background gradient animation */
+@keyframes gradientShift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+.animate-gradientShift {
+  background: linear-gradient(135deg, #2563eb, #8b5cf6, #f472b6);
+  background-size: 300% 300%;
+  animation: gradientShift 20s ease infinite;
+}
+/* Canvas particles */
+canvas#splash-particles { display:block; width:100%; height:100%; }
+</style>
+</head>
+<body class="safe-pb">
+
 <!-- ====================== -->
-<!-- FULL SPLASH SCREEN WITH BUTTON HIGHLIGHT -->
+<!-- MOBILE-OPTIMIZED SPLASH SCREEN WITH PARTICLES -->
 <!-- ====================== -->
-<div id="home-screen" class="fixed top-0 left-0 w-full h-full z-[9999] flex flex-col items-center justify-center bg-gradient-to-b from-blue-500 to-purple-600 text-white p-6">
+<div id="home-screen" class="fixed top-0 left-0 w-full h-full z-[9999] flex flex-col items-center justify-center text-white p-6 overflow-hidden">
+
+    <!-- Animated gradient + particles background -->
+    <canvas id="splash-particles" class="absolute inset-0 -z-10"></canvas>
+    <div class="absolute inset-0 bg-gradient-to-b from-blue-500 to-purple-600 animate-gradientShift -z-20"></div>
 
     <!-- Title / Subtitle -->
     <h1 id="splash-title" class="text-5xl font-black mb-4 text-center transition-opacity duration-700">Welcome to Nerja 2026</h1>
@@ -23,146 +65,160 @@
         </div>
     </div>
 
-    <!-- Static Language Buttons -->
-    <div class="flex gap-4">
-        <button id="splash-btn-EN" class="bg-white text-blue-600 font-bold px-6 py-3 rounded-xl shadow-lg hover:scale-105 transition-transform">
-            EN
+    <!-- Language Flag Buttons -->
+    <div class="flex gap-6">
+        <!-- English Flag -->
+        <button id="splash-btn-EN" class="p-3 rounded-full shadow-lg hover:scale-110 transition-transform">
+            <img src="https://flagcdn.com/w40/gb.png" alt="EN" width="40" height="28">
         </button>
-        <button id="splash-btn-NL" class="bg-white text-blue-600 font-bold px-6 py-3 rounded-xl shadow-lg hover:scale-105 transition-transform">
-            NL
+        <!-- Dutch Flag -->
+        <button id="splash-btn-NL" class="p-3 rounded-full shadow-lg hover:scale-110 transition-transform">
+            <img src="https://flagcdn.com/w40/nl.png" alt="NL" width="40" height="28">
         </button>
     </div>
 </div>
 
+<style>
+/* Animated gradient */
+@keyframes gradientShift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+.animate-gradientShift {
+  background: linear-gradient(135deg, #2563eb, #8b5cf6, #f472b6);
+  background-size: 300% 300%;
+  animation: gradientShift 20s ease infinite;
+}
+
+/* Canvas particles */
+canvas#splash-particles { display:block; width:100%; height:100%; }
+
+/* Highlight active flag */
+.active-flag {
+  border: 2px solid white;
+  box-shadow: 0 0 15px rgba(255,255,255,0.6);
+}
+</style>
+
 <script>
-// Text sets for cycling
-const splashTexts = [
-    { lang: 'EN', title: "Welcome to Nerja 2026", subtitle: "Family Holiday Planner", countdownLabel: "Holiday Countdown" },
-    { lang: 'NL', title: "Welkom bij Nerja 2026", subtitle: "Gezinsvakantie Planner", countdownLabel: "Vakantie aftellen" }
+// ====================
+// Particles background
+const canvas = document.getElementById("splash-particles");
+const ctx = canvas.getContext("2d");
+let w = canvas.width = window.innerWidth;
+let h = canvas.height = window.innerHeight;
+const particles = [];
+const numParticles = 40;
+for(let i=0;i<numParticles;i++){
+    particles.push({x:Math.random()*w,y:Math.random()*h,r:Math.random()*1.5+0.5,dx:(Math.random()-0.5)*0.2,dy:(Math.random()-0.5)*0.2});
+}
+window.addEventListener('resize', ()=>{w=canvas.width=window.innerWidth; h=canvas.height=window.innerHeight;});
+function drawParticles(){ctx.clearRect(0,0,w,h);particles.forEach(p=>{ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,Math.PI*2);ctx.fillStyle="rgba(255,255,255,0.2)";ctx.fill();p.x+=p.dx;p.y+=p.dy;if(p.x<0||p.x>w)p.dx*=-1;if(p.y<0||p.y>h)p.dy*=-1;});requestAnimationFrame(drawParticles);}
+drawParticles();
+
+// ====================
+// Splash text cycle + flag highlight
+const splashTexts=[
+    { lang:'EN', title:"Welcome to Nerja 2026", subtitle:"Family Holiday Planner" },
+    { lang:'NL', title:"Welkom bij Nerja 2026", subtitle:"Gezinsvakantie Planner" }
 ];
-
-let splashIndex = 0;
-
-// Animate title/subtitle/countdown and highlight the correct button
-function loopSplashText() {
+let splashIndex=0;
+function loopSplashText(){
     const title = document.getElementById("splash-title");
     const subtitle = document.getElementById("splash-subtitle");
-    const countdownLabel = document.getElementById("splash-countdown-label");
     const btnEN = document.getElementById("splash-btn-EN");
     const btnNL = document.getElementById("splash-btn-NL");
 
-    // Fade out
-    title.style.opacity = 0;
-    subtitle.style.opacity = 0;
-    countdownLabel.style.opacity = 0;
+    title.style.opacity=0; subtitle.style.opacity=0;
+    setTimeout(()=>{
+        splashIndex=(splashIndex+1)%splashTexts.length;
+        const current=splashTexts[splashIndex];
+        title.innerText=current.title;
+        subtitle.innerText=current.subtitle;
+        title.style.opacity=1;
+        subtitle.style.opacity=1;
 
-    setTimeout(() => {
-        // Update text
-        splashIndex = (splashIndex + 1) % splashTexts.length;
-        const current = splashTexts[splashIndex];
-
-        title.innerText = current.title;
-        subtitle.innerText = current.subtitle;
-        countdownLabel.innerText = current.countdownLabel;
-
-        // Fade in
-        title.style.opacity = 1;
-        subtitle.style.opacity = 1;
-        countdownLabel.style.opacity = 1;
-
-        // Highlight buttons
-        if(current.lang === 'EN'){
-            btnEN.classList.add("bg-blue-600", "text-white");
-            btnNL.classList.remove("bg-blue-600", "text-white");
-            btnEN.classList.remove("text-blue-600");
-            btnNL.classList.add("text-blue-600");
+        // Highlight correct flag
+        if(current.lang==='EN'){
+            btnEN.classList.add("active-flag");
+            btnNL.classList.remove("active-flag");
         } else {
-            btnNL.classList.add("bg-blue-600", "text-white");
-            btnEN.classList.remove("bg-blue-600", "text-white");
-            btnNL.classList.remove("text-blue-600");
-            btnEN.classList.add("text-blue-600");
+            btnNL.classList.add("active-flag");
+            btnEN.classList.remove("active-flag");
         }
-    }, 700);
+    },700);
 }
-setInterval(loopSplashText, 3000);
+setInterval(loopSplashText,3000);
 
+// ====================
 // Countdown
-function updateSplashCountdown() {
-    const el = document.getElementById("splash-countdown");
-    if (!el) return;
-    const target = new Date("2026-04-25T05:25:00");
-    const now = new Date();
-    const diff = target - now;
-    if (diff <= 0) {
-        el.innerText = "✈️ It's time!";
-        return;
-    }
-    const days = Math.floor(diff / (1000*60*60*24));
-    const hours = Math.floor((diff / (1000*60*60)) % 24);
-    const mins = Math.floor((diff / (1000*60)) % 60);
-    const secs = Math.floor((diff / 1000) % 60);
-    el.innerText = `${days}d ${hours}h ${mins}m ${secs}s`;
+function updateSplashCountdown(){
+    const el=document.getElementById("splash-countdown");
+    if(!el)return;
+    const target=new Date("2026-04-25T05:25:00");
+    const now=new Date();
+    const diff=target-now;
+    if(diff<=0){el.innerText="✈️ It's time!";return;}
+    const days=Math.floor(diff/(1000*60*60*24));
+    const hours=Math.floor((diff/(1000*60*60))%24);
+    const mins=Math.floor((diff/(1000*60))%60);
+    const secs=Math.floor((diff/1000)%60);
+    el.innerText=`${days}d ${hours}h ${mins}m ${secs}s`;
 }
 updateSplashCountdown();
-setInterval(updateSplashCountdown, 1000);
+setInterval(updateSplashCountdown,1000);
 
+// ====================
 // Weather
-async function updateSplashWeather() {
-    try {
-        const res = await fetch("https://api.open-meteo.com/v1/forecast?latitude=36.75&longitude=-3.87&current_weather=true");
-        const data = await res.json();
-        const tempEl = document.getElementById("splash-weather-temp");
-        const iconEl = document.getElementById("splash-weather-icon");
-        if (!tempEl || !iconEl) return;
+async function updateSplashWeather(){
+    try{
+        const res=await fetch("https://api.open-meteo.com/v1/forecast?latitude=36.75&longitude=-3.87&current_weather=true");
+        const data=await res.json();
+        const tempEl=document.getElementById("splash-weather-temp");
+        const iconEl=document.getElementById("splash-weather-icon");
+        if(!tempEl||!iconEl)return;
+        const temp=Math.round(data.current_weather.temperature);
+        const code=data.current_weather.weathercode;
+        tempEl.innerText=temp+"°C";
 
-        const temp = Math.round(data.current_weather.temperature);
-        const code = data.current_weather.weathercode;
-
-        tempEl.innerText = temp + "°C";
-
-        let icon = "fa-sun";
-        if ([1,2,3].includes(code)) icon = "fa-cloud-sun";
-        else if ([45,48].includes(code)) icon = "fa-smog";
-        else if ([51,53,55,61,63,65].includes(code)) icon = "fa-cloud-rain";
-        else if ([71,73,75].includes(code)) icon = "fa-snowflake";
-        else if ([95,96,99].includes(code)) icon = "fa-bolt";
-
-        iconEl.className = `fas ${icon} text-lg`;
-    } catch {
-        const tempEl = document.getElementById("splash-weather-temp");
-        if (tempEl) tempEl.innerText = "--";
+        let icon="fa-sun";
+        if([1,2,3].includes(code)) icon="fa-cloud-sun";
+        else if([45,48].includes(code)) icon="fa-smog";
+        else if([51,53,55,61,63,65].includes(code)) icon="fa-cloud-rain";
+        else if([71,73,75].includes(code)) icon="fa-snowflake";
+        else if([95,96,99].includes(code)) icon="fa-bolt";
+        iconEl.className=`fas ${icon} text-lg`;
+    }catch{
+        const tempEl=document.getElementById("splash-weather-temp");
+        if(tempEl) tempEl.innerText="--";
     }
 }
 updateSplashWeather();
-setInterval(updateSplashWeather, 600000);
+setInterval(updateSplashWeather,600000);
 
-// Enter App button handlers (corrected logic)
+// ====================
+// Enter App buttons
 function enterApp(lang){
-    localStorage.setItem('appLanguage', lang); // store selected language
-
-    const splash = document.getElementById("home-screen");
-    splash.style.opacity = 0;
-    setTimeout(()=>{ splash.style.display = "none"; }, 700);
-
-    // Show main app
-    const main = document.getElementById("view-main");
+    localStorage.setItem('appLanguage',lang);
+    const splash=document.getElementById("home-screen");
+    splash.style.opacity=0;
+    setTimeout(()=>{splash.style.display="none";},700);
+    const main=document.getElementById("view-main");
     if(main) main.classList.add("active");
 
-    // Correct top-right toggle logic
-    const currentLangButton = document.getElementById("lang-btn");
+    // Sync top-right toggle
+    const currentLangButton=document.getElementById("lang-btn");
     if(currentLangButton){
-        // Only click if the button text doesn't match the target language
-        // Since the button shows the OTHER language, we reverse the logic:
-        if((lang==='EN' && currentLangButton.innerText.trim()==='EN') ||
-           (lang==='NL' && currentLangButton.innerText.trim()==='NL')){
-            currentLangButton.click(); // toggle to the correct language
+        const currentLang=currentLangButton.innerText.trim();
+        if((lang==='EN' && currentLang==='EN')||(lang==='NL' && currentLang==='NL')){
+            currentLangButton.click();
         }
     }
 }
-
-// Attach static buttons
-document.getElementById("splash-btn-EN").addEventListener("click", ()=>enterApp('EN'));
-document.getElementById("splash-btn-NL").addEventListener("click", ()=>enterApp('NL'));
+document.getElementById("splash-btn-EN").addEventListener("click",()=>enterApp('EN'));
+document.getElementById("splash-btn-NL").addEventListener("click",()=>enterApp('NL'));
+</script>
 </script>
   <script>
 function updateMap(location) {
@@ -337,48 +393,85 @@ document.addEventListener("DOMContentLoaded", () => {
 </head>
 <body class="safe-pb">
 
-    <!-- Top Bar (not fixed anymore) -->
-    <div class="w-full bg-white/90 backdrop-blur-md border-b border-slate-100 p-4 shadow-sm space-y-3">
-        
-        <!-- Title and Dates -->
-        <div class="flex justify-between items-center">
-            <div>
-                <h1 class="font-black text-xl gradient-text">Nerja 2026</h1>
-                <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest" data-i18n="dates">
-                    25 Apr — 01 May • Family Trip
-                </p>
-            </div>
-            <button onclick="toggleLanguage()" id="lang-btn" class="bg-slate-100 hover:bg-slate-200 text-slate-700 font-black text-xs py-2 px-4 rounded-full transition-colors">
-                NL
-            </button>
-        </div>
-
-        <!-- ✈️ Holiday Countdown + Weather -->
-        <div class="bg-gradient-to-r from-blue-500 to-purple-500 text-white py-2 px-4 rounded-xl shadow">
-            <div class="flex justify-between items-center">
-
-                <!-- Countdown -->
-                <div class="text-left">
-                    <p class="text-[10px] font-bold uppercase tracking-widest opacity-80">
-                        Holiday Countdown
-                    </p>
-                    <p id="countdown" class="text-sm font-black">
-                        Loading...
-                    </p>
-                </div>
-
-                <!-- Weather -->
-                <div class="text-right flex items-center gap-2">
-                    <i id="weather-icon" class="fas fa-sun text-lg"></i>
-                    <span id="weather-temp" class="text-sm font-black">--°C</span>
-                </div>
-
-            </div>
-        </div>
+<!-- ====================== -->
+<!-- HEADER FOR APP (AFTER SPLASH) -->
+<!-- ====================== -->
+<div class="w-full bg-white/90 backdrop-blur-md border-b border-slate-100 p-4 shadow-sm flex justify-between items-center">
+    <div>
+        <h1 class="font-black text-xl gradient-text">Nerja 2026</h1>
+        <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-1">25 Apr — 01 May • Family Trip</p>
     </div>
 
-    <!-- Optional spacer to separate header from content -->
-    <div class="h-4"></div>
+    <div class="flex items-center gap-4 text-sm font-black text-slate-800">
+        <span id="header-countdown">--d --h --m --s</span>
+        <i id="header-weather-icon" class="fas fa-sun text-lg"></i>
+        <span id="header-weather-temp">--°C</span>
+
+        <button onclick="toggleLanguage()" id="lang-btn" class="bg-slate-100 hover:bg-slate-200 text-slate-700 font-black text-xs py-1 px-3 rounded-full transition-colors">
+            NL
+        </button>
+    </div>
+</div>
+
+<script>
+// ====================
+// Header Countdown
+// ====================
+function updateHeaderCountdown(){
+    const el=document.getElementById("header-countdown");
+    if(!el) return;
+    const target=new Date("2026-04-25T05:25:00");
+    const now=new Date();
+    const diff=target-now;
+    if(diff<=0){ el.innerText="✈️ It's time!"; return; }
+    const days=Math.floor(diff/(1000*60*60*24));
+    const hours=Math.floor((diff/(1000*60*60))%24);
+    const mins=Math.floor((diff/(1000*60))%60);
+    const secs=Math.floor((diff/1000)%60);
+    el.innerText=`${days}d ${hours}h ${mins}m ${secs}s`;
+}
+updateHeaderCountdown();
+setInterval(updateHeaderCountdown,1000);
+
+// ====================
+// Header Weather
+// ====================
+async function updateHeaderWeather(){
+    try{
+        const res=await fetch("https://api.open-meteo.com/v1/forecast?latitude=36.75&longitude=-3.87&current_weather=true");
+        const data=await res.json();
+        const tempEl=document.getElementById("header-weather-temp");
+        const iconEl=document.getElementById("header-weather-icon");
+        if(!tempEl||!iconEl)return;
+        const temp=Math.round(data.current_weather.temperature);
+        const code=data.current_weather.weathercode;
+        tempEl.innerText=temp+"°C";
+
+        let icon="fa-sun";
+        if([1,2,3].includes(code)) icon="fa-cloud-sun";
+        else if([45,48].includes(code)) icon="fa-smog";
+        else if([51,53,55,61,63,65].includes(code)) icon="fa-cloud-rain";
+        else if([71,73,75].includes(code)) icon="fa-snowflake";
+        else if([95,96,99].includes(code)) icon="fa-bolt";
+
+        iconEl.className=`fas ${icon} text-lg`;
+    }catch{
+        const tempEl=document.getElementById("header-weather-temp");
+        if(tempEl) tempEl.innerText="--";
+    }
+}
+updateHeaderWeather();
+setInterval(updateHeaderWeather,600000);
+</script>
+
+<style>
+/* Gradient text for title */
+.gradient-text{
+    background: linear-gradient(135deg,#2563eb,#8b5cf6);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+</style>
 
 
     <!-- MAIN MENU (DAYS) -->
