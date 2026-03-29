@@ -394,57 +394,94 @@ document.addEventListener("DOMContentLoaded", () => {
 <body class="safe-pb">
 
 <!-- ====================== -->
-<!-- HEADER FOR APP (AFTER SPLASH) -->
+<!-- HEADER -->
 <!-- ====================== -->
 <div class="w-full bg-white/90 backdrop-blur-md border-b border-slate-100 p-4 shadow-sm flex justify-between items-center">
     <div>
         <h1 class="font-black text-xl gradient-text">Nerja 2026</h1>
-        <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-1">25 Apr — 01 May • Family Trip</p>
+        <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-1">
+            25 Apr — 01 May • Family Trip
+        </p>
     </div>
 
-    <div class="flex items-center gap-4 text-sm font-black text-slate-800">
-        <span id="header-countdown">--d --h --m --s</span>
-        <i id="header-weather-icon" class="fas fa-sun text-lg"></i>
-        <span id="header-weather-temp">--°C</span>
+    <button onclick="toggleLanguage()" id="lang-btn"
+        class="bg-slate-100 hover:bg-slate-200 text-slate-700 font-black text-xs py-1 px-3 rounded-full transition-all duration-200 hover:scale-105">
+        NL
+    </button>
+</div>
 
-        <button onclick="toggleLanguage()" id="lang-btn" class="bg-slate-100 hover:bg-slate-200 text-slate-700 font-black text-xs py-1 px-3 rounded-full transition-colors">
-            NL
-        </button>
+<!-- ====================== -->
+<!-- COUNTDOWN + WEATHER (DARK GLASS UI) -->
+<!-- ====================== -->
+<div class="w-full px-4 py-4 border-b border-slate-100">
+
+    <div class="glass-card flex justify-between items-center">
+
+        <!-- Countdown -->
+        <div class="text-left">
+            <p class="text-[10px] font-bold uppercase tracking-widest text-white/70">
+                Holiday Countdown
+            </p>
+            <p class="text-base font-black text-white tracking-tight">
+                <span id="cd-days">--</span>d 
+                <span id="cd-hours">--</span>h 
+                <span id="cd-mins">--</span>m 
+                <span id="cd-secs">--</span>s
+            </p>
+        </div>
+
+        <!-- Weather -->
+        <div class="flex items-center gap-2 text-white">
+            <i id="header-weather-icon" class="fas fa-sun text-lg"></i>
+            <span id="header-weather-temp" class="text-base font-black">--°C</span>
+        </div>
+
     </div>
+
 </div>
 
 <script>
 // ====================
-// Header Countdown
+// Countdown
 // ====================
 function updateHeaderCountdown(){
-    const el=document.getElementById("header-countdown");
-    if(!el) return;
     const target=new Date("2026-04-25T05:25:00");
     const now=new Date();
     const diff=target-now;
-    if(diff<=0){ el.innerText="✈️ It's time!"; return; }
+
+    if(diff<=0){
+        document.querySelector(".glass-card").innerHTML =
+            "<span class='font-black text-green-300'>✈️ It's time!</span>";
+        return;
+    }
+
     const days=Math.floor(diff/(1000*60*60*24));
     const hours=Math.floor((diff/(1000*60*60))%24);
     const mins=Math.floor((diff/(1000*60))%60);
     const secs=Math.floor((diff/1000)%60);
-    el.innerText=`${days}d ${hours}h ${mins}m ${secs}s`;
+
+    document.getElementById("cd-days").innerText=days;
+    document.getElementById("cd-hours").innerText=hours;
+    document.getElementById("cd-mins").innerText=mins;
+    document.getElementById("cd-secs").innerText=secs;
 }
 updateHeaderCountdown();
 setInterval(updateHeaderCountdown,1000);
 
 // ====================
-// Header Weather
+// Weather
 // ====================
 async function updateHeaderWeather(){
     try{
         const res=await fetch("https://api.open-meteo.com/v1/forecast?latitude=36.75&longitude=-3.87&current_weather=true");
         const data=await res.json();
+
         const tempEl=document.getElementById("header-weather-temp");
         const iconEl=document.getElementById("header-weather-icon");
-        if(!tempEl||!iconEl)return;
+
         const temp=Math.round(data.current_weather.temperature);
         const code=data.current_weather.weathercode;
+
         tempEl.innerText=temp+"°C";
 
         let icon="fa-sun";
@@ -456,8 +493,7 @@ async function updateHeaderWeather(){
 
         iconEl.className=`fas ${icon} text-lg`;
     }catch{
-        const tempEl=document.getElementById("header-weather-temp");
-        if(tempEl) tempEl.innerText="--";
+        document.getElementById("header-weather-temp").innerText="--";
     }
 }
 updateHeaderWeather();
@@ -465,12 +501,55 @@ setInterval(updateHeaderWeather,600000);
 </script>
 
 <style>
-/* Gradient text for title */
-.gradient-text{
-    background: linear-gradient(135deg,#2563eb,#8b5cf6);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
+/* ====================== */
+/* DARK GLASS CARD */
+/* ====================== */
+.glass-card{
+    background: rgba(15, 23, 42, 0.75); /* dark slate */
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
+    border-radius: 14px;
+    padding: 14px 16px;
+    width: 100%;
+    box-shadow: 
+        0 10px 30px rgba(0,0,0,0.25),
+        inset 0 1px 0 rgba(255,255,255,0.08);
+    position: relative;
+    overflow: hidden;
 }
+
+/* stronger gradient tint */
+.glass-card::before{
+    content:'';
+    position:absolute;
+    inset:0;
+    background: linear-gradient(135deg,#2563eb,#8b5cf6,#f472b6);
+    opacity:0.25;
+    pointer-events:none;
+}
+
+/* subtle glow edge */
+.glass-card::after{
+    content:'';
+    position:absolute;
+    inset:0;
+    border-radius:14px;
+    box-shadow: inset 0 0 0 1px rgba(255,255,255,0.08);
+}
+
+/* keep content above layers */
+.glass-card > *{
+    position:relative;
+    z-index:1;
+}
+
+/* Improve readability */
+.glass-card p,
+.glass-card span,
+.glass-card i{
+    text-shadow: 0 1px 2px rgba(0,0,0,0.4);
+}
+</style>
 </style>
 
 
@@ -924,7 +1003,51 @@ setInterval(updateHeaderWeather,600000);
                     <li class="flex gap-3"><i class="fas fa-info-circle mt-1 text-emerald-500"></i> <span data-i18n="tt2">Toll roads (AP-7) accept card payments and are usually much faster and quieter than coastal roads.</span></li>
                 </ul>
             </div>
+<!-- Flight & Infant Info -->
+<div class="bg-indigo-50 p-6 rounded-[2.5rem] border border-indigo-100 shadow-sm">
+    <h3 class="font-black text-lg text-indigo-900 mb-3 flex items-center gap-2">
+        <i class="fas fa-plane-departure"></i> 
+        <span data-i18n="flight-infant-title">Flight & Infant Info (Transavia)</span>
+    </h3>
 
+    <ul class="space-y-3 text-sm text-indigo-800 font-medium">
+        <li class="flex gap-3">
+            <i class="fas fa-baby mt-1 text-indigo-500"></i>
+            <span data-i18n="fi-1">
+                <strong>Infants (0–2 years):</strong> Travel on an adult’s lap using a special infant seatbelt provided onboard.
+            </span>
+        </li>
+
+        <li class="flex gap-3">
+            <i class="fas fa-suitcase mt-1 text-indigo-500"></i>
+            <span data-i18n="fi-2">
+                <strong>Baggage Allowance:</strong> Each infant can bring 1 extra baby item (e.g. stroller, buggy, or car seat) free of charge.
+            </span>
+        </li>
+
+        <li class="flex gap-3">
+            <i class="fas fa-weight mt-1 text-indigo-500"></i>
+            <span data-i18n="fi-3">
+                <strong>Extra Checked Bag:</strong> You can add a separate checked bag (typically up to 10kg) for baby essentials.
+            </span>
+        </li>
+
+        <li class="flex gap-3">
+            <i class="fas fa-bottle-baby mt-1 text-indigo-500"></i>
+            <span data-i18n="fi-4">
+                <strong>Onboard:</strong> Baby food, milk, and liquids are allowed in addition to standard liquid limits.
+            </span>
+        </li>
+    </ul>
+
+<button 
+    id="infant-btn"
+    onclick="window.open(getInfantLink(), '_blank')"
+    class="mt-5 w-full bg-indigo-100 text-indigo-700 font-bold py-3 rounded-2xl text-sm flex items-center justify-center gap-2 transition-transform active:scale-95">
+    <i class="fas fa-up-right-from-square"></i> 
+    <span data-i18n="fi-link">View Transavia Infant Policy</span>
+</button>
+</div>
              <!-- Health & Emergency -->
              <div class="bg-red-50 p-6 rounded-[2.5rem] border border-red-100 shadow-sm">
                 <h3 class="font-black text-lg text-red-900 mb-3 flex items-center gap-2"><i class="fas fa-first-aid"></i> <span data-i18n="health-title">Health & Emergencies</span></h3>
@@ -1301,5 +1424,28 @@ setInterval(updateHeaderWeather,600000);
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
     </script>
+    <script>
+/* ---------- NEW: Transavia Infant Section ---------- */
+translations.en["flight-infant-title"] = "Flight & Infant Info (Transavia)";
+translations.en["fi-1"] = "<strong>Infants (0–2 years):</strong> Travel on an adult’s lap using a special infant seatbelt provided onboard.";
+translations.en["fi-2"] = "<strong>Baggage Allowance:</strong> Each infant can bring 1 extra baby item free of charge.";
+translations.en["fi-3"] = "<strong>Extra Checked Bag:</strong> You can add a separate checked bag (typically up to 10kg).";
+translations.en["fi-4"] = "<strong>Onboard:</strong> Baby food and milk are allowed.";
+translations.en["fi-link"] = "View Transavia Infant Policy";
+
+translations.nl["flight-infant-title"] = "Vlucht & Baby Info (Transavia)";
+translations.nl["fi-1"] = "<strong>Baby's (0–2 jaar):</strong> Reizen op schoot met een speciale babygordel.";
+translations.nl["fi-2"] = "<strong>Bagage:</strong> 1 extra baby-item gratis.";
+translations.nl["fi-3"] = "<strong>Extra Bagage:</strong> Extra koffer tot ±10kg mogelijk.";
+translations.nl["fi-4"] = "<strong>Aan boord:</strong> Babyvoeding en melk toegestaan.";
+translations.nl["fi-link"] = "Bekijk Transavia Babybeleid";
+
+/* Auto-switching link for button */
+function getInfantLink() {
+    return currentLang === 'nl'
+        ? "https://www.transavia.com/service/nl-nl/kinderen-huisdieren-groepen/vliegen-met-een-baby"
+        : "https://www.transavia.com/help/en-nl/children-pets-groups/flying-with-a-baby";
+}
+</script>
 </body>
 </html>
