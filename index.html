@@ -83,22 +83,35 @@ canvas#splash-particles { display:block; width:100%; height:100%; }
 <!-- ====================== -->
 <!-- MOBILE-OPTIMIZED SPLASH SCREEN WITH PARTICLES -->
 <!-- ====================== -->
-<div id="home-screen" class="fixed inset-0 z-[9999] flex flex-col items-center justify-center text-white overflow-hidden"
-     style="padding-top: env(safe-area-inset-top); padding-bottom: env(safe-area-inset-bottom); padding-left: env(safe-area-inset-left); padding-right: env(safe-area-inset-right);">
+<div id="home-screen"
+     class="fixed top-0 left-0 w-full z-[9999] flex flex-col items-center justify-center text-white overflow-hidden"
+     style="
+        height: 100dvh; 
+        padding-top: env(safe-area-inset-top); 
+        padding-bottom: env(safe-area-inset-bottom); 
+        padding-left: env(safe-area-inset-left); 
+        padding-right: env(safe-area-inset-right);
+     ">
 
     <!-- Animated gradient + particles background -->
     <canvas id="splash-particles" class="absolute inset-0 -z-10"></canvas>
     <div class="absolute inset-0 bg-gradient-to-b from-blue-500 to-purple-600 animate-gradientShift -z-20"></div>
 
     <!-- Title / Subtitle -->
-    <h1 id="splash-title" class="text-5xl font-black mb-4 text-center transition-opacity duration-700">Welcome to Nerja 2026</h1>
-    <p id="splash-subtitle" class="text-sm mb-6 text-center transition-opacity duration-700">Family Holiday Planner</p>
+    <h1 id="splash-title" class="text-5xl font-black mb-4 text-center transition-opacity duration-700">
+        Welcome to Nerja 2026
+    </h1>
+    <p id="splash-subtitle" class="text-sm mb-6 text-center transition-opacity duration-700">
+        Family Holiday Planner
+    </p>
 
     <!-- Countdown + Weather -->
     <div class="bg-white/20 backdrop-blur-md rounded-xl p-4 mb-6 w-full max-w-xs">
         <div class="flex justify-between items-center">
             <div class="text-left">
-                <p id="splash-countdown-label" class="text-[10px] font-bold uppercase tracking-widest opacity-80 transition-opacity duration-700">Holiday Countdown</p>
+                <p id="splash-countdown-label" class="text-[10px] font-bold uppercase tracking-widest opacity-80 transition-opacity duration-700">
+                    Holiday Countdown
+                </p>
                 <p id="splash-countdown" class="text-lg font-black">Loading...</p>
             </div>
             <div class="text-right flex items-center gap-2">
@@ -122,14 +135,6 @@ canvas#splash-particles { display:block; width:100%; height:100%; }
 </div>
 
 <style>
-/* ================== Splash Safe CSS ================== */
-html, body {
-    margin: 0;
-    padding: 0;
-    height: 100%;
-    overflow-x: hidden; /* only block horizontal scroll globally */
-}
-
 /* Animated gradient */
 @keyframes gradientShift {
   0% { background-position: 0% 50%; }
@@ -143,22 +148,12 @@ html, body {
 }
 
 /* Canvas particles */
-canvas#splash-particles {
-    display:block;
-    width:100%;
-    height:100%;
-}
+canvas#splash-particles { display:block; width:100%; height:100%; }
 
 /* Highlight active flag */
 .active-flag {
   border: 2px solid white;
   box-shadow: 0 0 15px rgba(255,255,255,0.6);
-}
-
-/* Prevent only splash scroll on iPhone */
-#home-screen {
-    touch-action: none; /* disables overscroll */
-    -webkit-overflow-scrolling: auto;
 }
 </style>
 
@@ -167,30 +162,34 @@ canvas#splash-particles {
 // Particles background
 const canvas = document.getElementById("splash-particles");
 const ctx = canvas.getContext("2d");
-
-function resizeCanvas() {
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
-}
-resizeCanvas();
-window.addEventListener('resize', resizeCanvas);
-
+let w = canvas.width = window.innerWidth;
+let h = canvas.height = window.innerHeight;
 const particles = [];
 const numParticles = 40;
 for(let i=0;i<numParticles;i++){
-    particles.push({x:Math.random()*canvas.width, y:Math.random()*canvas.height, r:Math.random()*1.5+0.5, dx:(Math.random()-0.5)*0.2, dy:(Math.random()-0.5)*0.2});
+    particles.push({
+        x: Math.random()*w,
+        y: Math.random()*h,
+        r: Math.random()*1.5+0.5,
+        dx: (Math.random()-0.5)*0.2,
+        dy: (Math.random()-0.5)*0.2
+    });
 }
-
+window.addEventListener('resize', ()=>{
+    w = canvas.width = window.innerWidth;
+    h = canvas.height = window.innerHeight;
+});
 function drawParticles(){
-    ctx.clearRect(0,0,canvas.width,canvas.height);
+    ctx.clearRect(0,0,w,h);
     particles.forEach(p=>{
         ctx.beginPath();
         ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
         ctx.fillStyle="rgba(255,255,255,0.2)";
         ctx.fill();
-        p.x+=p.dx; p.y+=p.dy;
-        if(p.x<0||p.x>canvas.width)p.dx*=-1;
-        if(p.y<0||p.y>canvas.height)p.dy*=-1;
+        p.x+=p.dx;
+        p.y+=p.dy;
+        if(p.x<0||p.x>w) p.dx*=-1;
+        if(p.y<0||p.y>h) p.dy*=-1;
     });
     requestAnimationFrame(drawParticles);
 }
@@ -203,7 +202,6 @@ const splashTexts=[
     { lang:'NL', title:"Welkom bij Nerja 2026", subtitle:"Gezinsvakantie Planner" }
 ];
 let splashIndex=0;
-
 function loopSplashText(){
     const title = document.getElementById("splash-title");
     const subtitle = document.getElementById("splash-subtitle");
@@ -219,6 +217,7 @@ function loopSplashText(){
         title.style.opacity=1;
         subtitle.style.opacity=1;
 
+        // Highlight correct flag
         if(current.lang==='EN'){
             btnEN.classList.add("active-flag");
             btnNL.classList.remove("active-flag");
@@ -234,11 +233,11 @@ setInterval(loopSplashText,3000);
 // Countdown
 function updateSplashCountdown(){
     const el=document.getElementById("splash-countdown");
-    if(!el)return;
+    if(!el) return;
     const target=new Date("2026-04-25T05:25:00");
     const now=new Date();
     const diff=target-now;
-    if(diff<=0){el.innerText="✈️ It's time!";return;}
+    if(diff<=0){ el.innerText="✈️ It's time!"; return; }
     const days=Math.floor(diff/(1000*60*60*24));
     const hours=Math.floor((diff/(1000*60*60))%24);
     const mins=Math.floor((diff/(1000*60))%60);
@@ -256,7 +255,7 @@ async function updateSplashWeather(){
         const data=await res.json();
         const tempEl=document.getElementById("splash-weather-temp");
         const iconEl=document.getElementById("splash-weather-icon");
-        if(!tempEl||!iconEl)return;
+        if(!tempEl||!iconEl) return;
         const temp=Math.round(data.current_weather.temperature);
         const code=data.current_weather.weathercode;
         tempEl.innerText=temp+"°C";
@@ -283,10 +282,6 @@ function enterApp(lang){
     const splash=document.getElementById("home-screen");
     splash.style.opacity=0;
     setTimeout(()=>{splash.style.display="none";},700);
-
-    // Re-enable app scrolling after splash disappears
-    document.body.style.overflowY = "auto";
-
     const main=document.getElementById("view-main");
     if(main) main.classList.add("active");
 
@@ -299,12 +294,9 @@ function enterApp(lang){
         }
     }
 }
-
-// Temporarily disable scroll while splash is visible
-document.body.style.overflowY = "hidden";
-
 document.getElementById("splash-btn-EN").addEventListener("click",()=>enterApp('EN'));
 document.getElementById("splash-btn-NL").addEventListener("click",()=>enterApp('NL'));
+</script>
 </script>
   <script>
 function updateMap(location) {
