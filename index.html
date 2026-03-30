@@ -41,26 +41,26 @@ canvas#splash-particles { display:block; width:100%; height:100%; }
 <!-- ====================== -->
 <!-- MOBILE-OPTIMIZED SPLASH SCREEN WITH PARTICLES -->
 <!-- ====================== -->
-<div id="home-screen" class="fixed top-0 left-0 w-full h-full z-[9999] flex flex-col items-center justify-center text-white p-6 overflow-hidden">
+<div id="home-screen" class="fixed top-0 left-0 w-full z-[9999] flex flex-col items-center justify-center text-white p-6 overflow-hidden">
 
     <!-- Animated gradient + particles background -->
     <canvas id="splash-particles" class="absolute inset-0 -z-10"></canvas>
-    <div class="absolute inset-0 bg-gradient-to-b from-blue-500 to-purple-600 animate-gradientShift -z-20"></div>
+    <div class="absolute inset-0 bg-gradient-to-b from-[#FF7E5F] via-[#FEB47B] to-[#6A11CB] animate-gradientShift -z-20"></div>
 
     <!-- Title / Subtitle -->
-    <h1 id="splash-title" class="text-5xl font-black mb-4 text-center transition-opacity duration-700">Welcome to Nerja 2026</h1>
-    <p id="splash-subtitle" class="text-sm mb-6 text-center transition-opacity duration-700">Family Holiday Planner</p>
+    <h1 id="splash-title" class="text-5xl md:text-6xl font-extrabold mb-4 text-center tracking-wide text-shadow transition-opacity duration-700">Welcome to Nerja 2026</h1>
+    <p id="splash-subtitle" class="text-sm md:text-lg mb-8 text-center font-medium text-shadow transition-opacity duration-700">Family Holiday Planner</p>
 
     <!-- Countdown + Weather -->
-    <div class="bg-white/20 backdrop-blur-md rounded-xl p-4 mb-6 w-full max-w-xs">
+    <div class="bg-white/10 backdrop-blur-lg rounded-3xl p-6 mb-8 w-full max-w-xs shadow-lg border border-white/20">
         <div class="flex justify-between items-center">
             <div class="text-left">
-                <p id="splash-countdown-label" class="text-[10px] font-bold uppercase tracking-widest opacity-80 transition-opacity duration-700">Holiday Countdown</p>
-                <p id="splash-countdown" class="text-lg font-black">Loading...</p>
+                <p id="splash-countdown-label" class="text-[10px] md:text-xs font-bold uppercase tracking-wider opacity-80 transition-opacity duration-700">Holiday Countdown</p>
+                <p id="splash-countdown" class="text-lg md:text-xl font-bold mt-1">Loading...</p>
             </div>
-            <div class="text-right flex items-center gap-2">
-                <i id="splash-weather-icon" class="fas fa-sun text-lg"></i>
-                <span id="splash-weather-temp" class="text-lg font-black">--°C</span>
+            <div class="text-right flex items-center gap-3">
+                <i id="splash-weather-icon" class="fas fa-sun text-xl md:text-2xl"></i>
+                <span id="splash-weather-temp" class="text-lg md:text-xl font-bold">--°C</span>
             </div>
         </div>
     </div>
@@ -68,25 +68,25 @@ canvas#splash-particles { display:block; width:100%; height:100%; }
     <!-- Language Flag Buttons -->
     <div class="flex gap-6">
         <!-- English Flag -->
-        <button id="splash-btn-EN" class="p-3 rounded-full shadow-lg hover:scale-110 transition-transform">
+        <button id="splash-btn-EN" class="p-3 rounded-full shadow-xl hover:scale-110 hover:shadow-2xl transition-transform bg-white/20 backdrop-blur-md border border-white/30">
             <img src="https://flagcdn.com/w40/gb.png" alt="EN" width="40" height="28">
         </button>
         <!-- Dutch Flag -->
-        <button id="splash-btn-NL" class="p-3 rounded-full shadow-lg hover:scale-110 transition-transform">
+        <button id="splash-btn-NL" class="p-3 rounded-full shadow-xl hover:scale-110 hover:shadow-2xl transition-transform bg-white/20 backdrop-blur-md border border-white/30">
             <img src="https://flagcdn.com/w40/nl.png" alt="NL" width="40" height="28">
         </button>
     </div>
 </div>
 
 <style>
-/* Animated gradient */
+/* Gradient animation */
 @keyframes gradientShift {
   0% { background-position: 0% 50%; }
   50% { background-position: 100% 50%; }
   100% { background-position: 0% 50%; }
 }
 .animate-gradientShift {
-  background: linear-gradient(135deg, #2563eb, #8b5cf6, #f472b6);
+  background: linear-gradient(135deg, #FF7E5F, #FEB47B, #6A11CB);
   background-size: 300% 300%;
   animation: gradientShift 20s ease infinite;
 }
@@ -94,14 +94,32 @@ canvas#splash-particles { display:block; width:100%; height:100%; }
 /* Canvas particles */
 canvas#splash-particles { display:block; width:100%; height:100%; }
 
+/* Text shadow for depth */
+.text-shadow {
+    text-shadow: 1px 1px 8px rgba(0,0,0,0.35);
+}
+
 /* Highlight active flag */
 .active-flag {
   border: 2px solid white;
-  box-shadow: 0 0 15px rgba(255,255,255,0.6);
+  box-shadow: 0 0 20px rgba(255,255,255,0.8);
+  transform: scale(1.05);
 }
 </style>
 
 <script>
+// ====================
+// iPhone-safe splash height
+function setSplashHeight() {
+    const splash = document.getElementById("home-screen");
+    if (!splash) return;
+    const vh = window.innerHeight;
+    splash.style.height = vh + "px";
+}
+setSplashHeight();
+window.addEventListener("resize", setSplashHeight);
+window.addEventListener("orientationchange", setSplashHeight);
+
 // ====================
 // Particles background
 const canvas = document.getElementById("splash-particles");
@@ -113,8 +131,23 @@ const numParticles = 40;
 for(let i=0;i<numParticles;i++){
     particles.push({x:Math.random()*w,y:Math.random()*h,r:Math.random()*1.5+0.5,dx:(Math.random()-0.5)*0.2,dy:(Math.random()-0.5)*0.2});
 }
-window.addEventListener('resize', ()=>{w=canvas.width=window.innerWidth; h=canvas.height=window.innerHeight;});
-function drawParticles(){ctx.clearRect(0,0,w,h);particles.forEach(p=>{ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,Math.PI*2);ctx.fillStyle="rgba(255,255,255,0.2)";ctx.fill();p.x+=p.dx;p.y+=p.dy;if(p.x<0||p.x>w)p.dx*=-1;if(p.y<0||p.y>h)p.dy*=-1;});requestAnimationFrame(drawParticles);}
+window.addEventListener('resize', ()=>{
+    w=canvas.width=window.innerWidth; 
+    h=canvas.height=window.innerHeight;
+});
+function drawParticles(){
+    ctx.clearRect(0,0,w,h);
+    particles.forEach(p=>{
+        ctx.beginPath();
+        ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
+        ctx.fillStyle="rgba(255,255,255,0.2)";
+        ctx.fill();
+        p.x+=p.dx; p.y+=p.dy;
+        if(p.x<0||p.x>w)p.dx*=-1;
+        if(p.y<0||p.y>h)p.dy*=-1;
+    });
+    requestAnimationFrame(drawParticles);
+}
 drawParticles();
 
 // ====================
@@ -139,7 +172,6 @@ function loopSplashText(){
         title.style.opacity=1;
         subtitle.style.opacity=1;
 
-        // Highlight correct flag
         if(current.lang==='EN'){
             btnEN.classList.add("active-flag");
             btnNL.classList.remove("active-flag");
@@ -207,7 +239,6 @@ function enterApp(lang){
     const main=document.getElementById("view-main");
     if(main) main.classList.add("active");
 
-    // Sync top-right toggle
     const currentLangButton=document.getElementById("lang-btn");
     if(currentLangButton){
         const currentLang=currentLangButton.innerText.trim();
@@ -218,7 +249,6 @@ function enterApp(lang){
 }
 document.getElementById("splash-btn-EN").addEventListener("click",()=>enterApp('EN'));
 document.getElementById("splash-btn-NL").addEventListener("click",()=>enterApp('NL'));
-</script>
 </script>
   <script>
 function updateMap(location) {
@@ -398,7 +428,9 @@ document.addEventListener("DOMContentLoaded", () => {
 <!-- ====================== -->
 <div class="w-full bg-white/90 backdrop-blur-md border-b border-slate-100 p-4 shadow-sm flex justify-between items-center">
     <div>
-        <h1 class="font-black text-xl gradient-text">Nerja 2026</h1>
+        <h1 class="font-black text-xl gradient-text cursor-pointer" onclick="returnToSplash()">
+            Nerja 2026
+        </h1>
         <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-1">
             25 Apr — 01 May • Family Trip
         </p>
@@ -411,11 +443,10 @@ document.addEventListener("DOMContentLoaded", () => {
 </div>
 
 <!-- ====================== -->
-<!-- COUNTDOWN + WEATHER (DARK GLASS UI) -->
+<!-- COUNTDOWN + WEATHER (GRADIENT GLASS UI) -->
 <!-- ====================== -->
 <div class="w-full px-4 py-4 border-b border-slate-100">
-
-    <div class="glass-card flex justify-between items-center">
+    <div class="glass-card-gradient flex justify-between items-center">
 
         <!-- Countdown -->
         <div class="text-left">
@@ -437,8 +468,59 @@ document.addEventListener("DOMContentLoaded", () => {
         </div>
 
     </div>
-
 </div>
+
+<style>
+/* ====================== */
+/* GRADIENT GLASS CARD (matches splash screen) */
+/* ====================== */
+.glass-card-gradient {
+    background: rgba(15, 23, 42, 0.75); /* dark slate */
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
+    border-radius: 14px;
+    padding: 14px 16px;
+    width: 100%;
+    box-shadow: 
+        0 10px 30px rgba(0,0,0,0.25),
+        inset 0 1px 0 rgba(255,255,255,0.08);
+    position: relative;
+    overflow: hidden;
+}
+
+/* Gradient overlay to match splash */
+.glass-card-gradient::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg,#2563eb,#8b5cf6,#f472b6);
+    opacity: 0.25;
+    pointer-events: none;
+    border-radius: 14px;
+}
+
+/* subtle glow edge */
+.glass-card-gradient::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 14px;
+    box-shadow: inset 0 0 0 1px rgba(255,255,255,0.08);
+}
+
+/* keep content above layers */
+.glass-card-gradient > * {
+    position: relative;
+    z-index: 1;
+}
+
+/* Improve readability */
+.glass-card-gradient p,
+.glass-card-gradient span,
+.glass-card-gradient i {
+    text-shadow: 0 1px 2px rgba(0,0,0,0.4);
+}
+</style>
 
 <script>
 // ====================
@@ -450,7 +532,7 @@ function updateHeaderCountdown(){
     const diff=target-now;
 
     if(diff<=0){
-        document.querySelector(".glass-card").innerHTML =
+        document.querySelector(".glass-card-gradient").innerHTML =
             "<span class='font-black text-green-300'>✈️ It's time!</span>";
         return;
     }
@@ -498,57 +580,22 @@ async function updateHeaderWeather(){
 }
 updateHeaderWeather();
 setInterval(updateHeaderWeather,600000);
+
+// ====================
+// RETURN TO SPLASH
+// ====================
+function returnToSplash(){
+    const splash = document.getElementById("home-screen");
+    const main = document.getElementById("view-main");
+    if(!splash) return;
+    splash.style.display = "flex";
+    splash.style.opacity = 1;
+    if(main) main.classList.remove("active");
+
+    // Reapply iPhone-safe height
+    splash.style.height = window.innerHeight + "px";
+}
 </script>
-
-<style>
-/* ====================== */
-/* DARK GLASS CARD */
-/* ====================== */
-.glass-card{
-    background: rgba(15, 23, 42, 0.75); /* dark slate */
-    backdrop-filter: blur(18px);
-    -webkit-backdrop-filter: blur(18px);
-    border-radius: 14px;
-    padding: 14px 16px;
-    width: 100%;
-    box-shadow: 
-        0 10px 30px rgba(0,0,0,0.25),
-        inset 0 1px 0 rgba(255,255,255,0.08);
-    position: relative;
-    overflow: hidden;
-}
-
-/* stronger gradient tint */
-.glass-card::before{
-    content:'';
-    position:absolute;
-    inset:0;
-    background: linear-gradient(135deg,#2563eb,#8b5cf6,#f472b6);
-    opacity:0.25;
-    pointer-events:none;
-}
-
-/* subtle glow edge */
-.glass-card::after{
-    content:'';
-    position:absolute;
-    inset:0;
-    border-radius:14px;
-    box-shadow: inset 0 0 0 1px rgba(255,255,255,0.08);
-}
-
-/* keep content above layers */
-.glass-card > *{
-    position:relative;
-    z-index:1;
-}
-
-/* Improve readability */
-.glass-card p,
-.glass-card span,
-.glass-card i{
-    text-shadow: 0 1px 2px rgba(0,0,0,0.4);
-}
 </style>
 </style>
 
